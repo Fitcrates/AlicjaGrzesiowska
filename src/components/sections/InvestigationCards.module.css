@@ -1,0 +1,215 @@
+.section {
+  border-top: var(--border-thin);
+}
+
+.sectionHeader {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  padding: var(--spacing-md) var(--spacing-xl);
+  border-bottom: var(--border-thin);
+}
+
+.sectionNumber {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.sectionLabel {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-secondary);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--spacing-md);
+  padding: var(--spacing-xl);
+}
+
+@media (min-width: 768px) {
+  .grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--spacing-lg);
+  }
+}
+
+/* grid placeholder */
+.placeholder {
+  position: relative;
+  aspect-ratio: 3/4;
+  width: 100%;
+}
+
+/* Card container with perspective */
+.cardWrapper {
+  perspective: 2000px;
+  cursor: pointer;
+  width: 100%;
+  aspect-ratio: 3/4;
+  position: relative;
+  z-index: 1;
+}
+
+/* Dim backdrop when any card is open */
+.pageOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(244, 240, 232, 0.85);
+  backdrop-filter: blur(8px);
+  z-index: 100;
+}
+
+/* Centered modal active card using Framer Motion layout */
+.isOpen.cardWrapper {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  /* Match the exact grid column width: (viewport - 2*padding - 3*gaps) / 4 */
+  width: calc((100vw - 14rem) / 4);
+  aspect-ratio: 3/4;
+  height: auto;
+  /* Hinge (left edge) at center, vertically centered */
+  transform: translate(0, -50%) !important; 
+  margin: 0;
+  z-index: 201; /* Above pageOverlay */
+  cursor: default;
+}
+
+@media (max-width: 767px) {
+  .isOpen.cardWrapper {
+    width: 45vw; /* ensures 2 * 45vw = 90vw fits on mobile */
+    transform: translate(0, -50%) !important;
+  }
+}
+
+/* The static back page (revealed when cover opens) */
+.bookRightPage {
+  position: absolute;
+  inset: 0;
+  background: var(--surface);
+  border: none;
+  box-shadow: var(--shadow-sm);
+  padding: var(--spacing-lg);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  z-index: 1;
+}
+
+.cardBackContent {
+  font-family: var(--font-heading);
+  font-style: italic;
+  font-size: clamp(1rem, 1.5vw, 1.1rem);
+  line-height: 1.6;
+  color: var(--color-primary);
+  margin-bottom: var(--spacing-md);
+}
+
+.cardBackCta {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  border-bottom: 1px solid var(--color-primary);
+  padding-bottom: 0.1rem;
+  align-self: flex-start;
+  margin-top: var(--spacing-md);
+  cursor: pointer;
+  transition: opacity var(--transition-normal);
+}
+
+.cardBackCta:hover {
+  opacity: 0.6;
+}
+
+/* The flipping cover */
+.bookCover {
+  position: absolute;
+  inset: 0;
+  transform-style: preserve-3d;
+  transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+  transform-origin: left center; /* always flip horizontally */
+  z-index: 2;
+}
+
+/* Delay flip until after centering transition on open */
+.isOpen .bookCover {
+  transform: rotateY(-180deg);
+  transition-delay: 0.4s;
+}
+
+/* Front face of cover */
+.coverFront {
+  position: absolute;
+  inset: 0;
+  background: var(--surface);
+  border: none;
+  box-shadow: var(--shadow-sm);
+  padding: var(--spacing-lg);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  backface-visibility: hidden;
+}
+
+.cardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.cardNumber,
+.cardCategory {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.cardCategory {
+  color: var(--color-secondary);
+}
+
+.cardTitle {
+  font-family: var(--font-heading);
+  font-size: clamp(1.25rem, 2.5vw, 2.5rem);
+  line-height: 1.15;
+  font-weight: 400;
+  text-align: center;
+  margin-bottom: var(--spacing-lg);
+}
+
+/* Back face of cover (inside page) */
+.coverBack {
+  position: absolute;
+  inset: 0;
+  background: var(--surface);
+  border: none;
+  box-shadow: -4px 0 12px rgba(0,0,0,0.03); /* Subtle shadow on the left edge when open */
+  padding: var(--spacing-lg);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  backface-visibility: hidden;
+  transform: rotateY(180deg); /* always horizontal upright */
+}
+
+.coverBackHeader {
+  display: flex;
+  justify-content: space-between;
+}
+
+.coverBackTitle {
+  font-family: var(--font-heading);
+  font-size: clamp(1.1rem, 1.8vw, 1.5rem);
+  line-height: 1.1;
+  text-align: center;
+  margin-top: auto;
+  margin-bottom: auto;
+}

@@ -1,0 +1,119 @@
+.hero {
+  min-height: calc(100vh - 60px); /* Adjust for navbar height */
+  display: flex;
+  flex-direction: column;
+}
+
+.heroProblemContainer {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-bottom: var(--spacing-xl);
+}
+
+.heroProblemText {
+  font-family: var(--font-body);
+  font-size: clamp(1rem, 1.5vw, 1.25rem);
+  line-height: 1.5;
+  color: var(--color-secondary);
+  text-align: center;
+  max-width: 650px;
+  margin-left: auto;
+  margin-right: auto;
+  font-style: italic;
+}
+
+/* Hero Content */
+.heroContent {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: var(--spacing-xl) var(--spacing-lg);
+  overflow: hidden; /* Prevent horizontal scroll from large text */
+}
+
+@media (min-width: 768px) {
+  .heroContent {
+    padding: var(--spacing-xl) var(--spacing-xl);
+  }
+}
+
+.headingWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.headingLine {
+  font-family: var(--font-heading);
+  font-weight: 400;
+  font-size: clamp(2rem, 6vw, 9rem);
+  line-height: 0.9;
+  letter-spacing: -0.03em;
+  color: var(--color-primary);
+  text-transform: uppercase;
+  display: block;
+  margin-bottom: 0.1em;
+  text-align: center;
+}
+
+.draftWord {
+  position: relative;
+  display: inline-block;
+  color: var(--color-secondary); /* slightly faded for the draft */
+}
+
+.strikethrough {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  height: 0.1em;
+  background-color: var(--color-terracotta);
+  transform: translateY(-50%);
+  z-index: 10;
+}
+
+.finalWord {
+  display: inline-block;
+  word-break: break-word; /* Ensure long words like ORGANIZATIONS break on very small screens if needed */
+}
+
+.headingItalic {
+  font-family: var(--font-heading);
+  font-style: italic;
+  text-transform: lowercase;
+  font-size: clamp(2.2rem, 7vw, 10rem);
+  font-weight: 400;
+  padding-right: 0.05em;
+  color: var(--color-terracotta);
+}
+
+/* Bottom bar */
+.heroBottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: var(--spacing-lg) var(--spacing-xl);
+  border-top: var(--border-thin);
+  margin: 0 var(--spacing-xl) var(--spacing-xl) var(--spacing-xl);
+}
+
+.heroDescription {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  line-height: 1.6;
+  max-width: 300px;
+  color: var(--color-primary);
+}
+
+.scrollIndicator {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-primary);
+}

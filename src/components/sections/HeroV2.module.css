@@ -1,0 +1,300 @@
+.hero {
+  min-height: calc(100vh - 60px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-xl) var(--spacing-md);
+  width: 100%;
+}
+
+.editorWindow {
+  width: 100%;
+  max-width: 1200px;
+  background: rgba(255, 255, 255, 0.5);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  border-radius: 16px;
+  box-shadow: 
+    0 30px 60px -15px rgba(0, 0, 0, 0.08),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.2),
+    inset 0 0 20px rgba(255, 255, 255, 0.3);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: all 0.4s ease;
+}
+
+.editorWindow.dark {
+  background: rgba(20, 20, 20, 0.65);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 
+    0 30px 60px -15px rgba(0, 0, 0, 0.3),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.05),
+    inset 0 0 20px rgba(0, 0, 0, 0.5);
+}
+
+.titleBar {
+  height: 48px;
+  background: rgba(255, 255, 255, 0.2);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  gap: 16px;
+  position: relative;
+  z-index: 2;
+}
+
+.editorWindow.dark .titleBar {
+  background: rgba(0, 0, 0, 0.2);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.windowControls {
+  display: flex;
+  gap: 8px;
+}
+
+.controlDot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.5), 0 1px 1px rgba(0, 0, 0, 0.1);
+}
+.editorWindow.dark .controlDot {
+  box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.2), 0 1px 1px rgba(0, 0, 0, 0.2);
+}
+
+.dotRed { background: #ff5f56; }
+.dotYellow { background: #ffbd2e; }
+.dotGreen { background: #27c93f; }
+
+.fileName {
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  color: rgba(0, 0, 0, 0.6);
+  font-weight: 500;
+  margin: 0 auto;
+  transform: translateX(-24px); /* offset for the dots */
+}
+
+.editorWindow.dark .fileName { color: rgba(255, 255, 255, 0.6); }
+
+.toolBar {
+  padding: 12px 16px;
+  background: rgba(255, 255, 255, 0.3);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  overflow-x: auto;
+  position: relative;
+  z-index: 2;
+}
+
+.editorWindow.dark .toolBar {
+  background: rgba(0, 0, 0, 0.15);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.toolGroupContainer {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.toolGroup {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding-right: 24px;
+  border-right: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.editorWindow.dark .toolGroup {
+  border-right: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.toolGroup:last-child {
+  border-right: none;
+}
+
+.toolButton {
+  background: transparent;
+  border: none;
+  border-radius: 6px;
+  padding: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(0, 0, 0, 0.6);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.toolButton:hover {
+  background: rgba(255, 255, 255, 0.5);
+  color: rgba(0, 0, 0, 0.9);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+}
+
+.toolButtonActive {
+  background: rgba(255, 255, 255, 0.8);
+  color: var(--color-terracotta);
+  box-shadow: inset 0 1px 2px rgba(0,0,0,0.05);
+}
+
+.editorWindow.dark .toolButton { color: rgba(255, 255, 255, 0.6); }
+.editorWindow.dark .toolButton:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.9);
+}
+.editorWindow.dark .toolButtonActive {
+  background: rgba(0, 0, 0, 0.3);
+  color: var(--color-terracotta);
+  box-shadow: inset 0 1px 2px rgba(0,0,0,0.2);
+}
+
+.themeToggleBtn {
+  margin-left: auto;
+}
+
+.editorContent {
+  padding: 60px 80px;
+  min-height: 500px;
+  background: transparent;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+@media (max-width: 768px) {
+  .editorContent {
+    padding: 30px 20px;
+  }
+}
+
+.heroProblemContainer {
+  margin-bottom: var(--spacing-xl);
+}
+
+.heroProblemText {
+  font-family: var(--font-body);
+  font-size: clamp(1rem, 1.2vw, 1.2rem);
+  line-height: 1.5;
+  color: rgba(0, 0, 0, 0.6);
+  font-style: italic;
+  max-width: 600px;
+}
+
+.editorWindow.dark .heroProblemText { color: rgba(255, 255, 255, 0.6); }
+
+.headingWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+  min-height: 220px; /* Pre-allocate space for 3 lines of heading text to prevent layout shift */
+}
+
+@media (min-width: 768px) {
+  .headingWrapper {
+    min-height: 280px;
+  }
+}
+
+.headingLine {
+  font-family: var(--font-heading);
+  font-weight: 400;
+  font-size: clamp(2rem, 5vw, 6rem);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  color: #111;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.2em;
+  margin-bottom: 0.2em;
+  width: 100%;
+}
+
+.editorWindow.dark .headingLine { color: #fff; }
+
+.draftWord {
+  position: relative;
+  display: inline-flex;
+  align-items: baseline;
+  color: rgba(0, 0, 0, 0.4);
+}
+
+.editorWindow.dark .draftWord { color: rgba(255, 255, 255, 0.4); }
+
+.strikethroughAnim {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  height: 0.1em;
+  background-color: var(--color-terracotta);
+  transform: translateY(-50%);
+  z-index: 10;
+}
+
+.finalWord {
+  display: inline-flex;
+  align-items: baseline;
+}
+
+.headingItalic {
+  font-family: var(--font-heading);
+  font-style: italic;
+  font-weight: 400;
+  color: var(--color-terracotta);
+}
+
+.statusBar {
+  height: 32px;
+  background: rgba(255, 255, 255, 0.3);
+  border-top: 1px solid rgba(0, 0, 0, 0.04);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: rgba(0, 0, 0, 0.5);
+  position: relative;
+  z-index: 2;
+}
+
+.editorWindow.dark .statusBar {
+  background: rgba(0, 0, 0, 0.15);
+  border-top: 1px solid rgba(255, 255, 255, 0.04);
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.listMarker {
+  display: inline-block;
+  margin-right: 0.5em;
+  font-family: var(--font-body);
+  font-weight: 500;
+  color: var(--color-terracotta);
+}
+
+/* Bottom bar */
+.heroBottom {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: var(--spacing-xl);
+  width: 100%;
+}
+
+.scrollIndicator {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-primary);
+}

@@ -1,0 +1,107 @@
+"use client";
+
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Menu, X } from "lucide-react";
+import Link from "next/link";
+import { useParams } from "next/navigation";
+import styles from "./Navbar.module.css";
+
+export default function Navbar() {
+  const [isOpen, setIsOpen] = useState(false);
+  const params = useParams();
+  const lang = params?.lang as string || "en";
+
+  const toggleMenu = () => setIsOpen(!isOpen);
+
+  const menuVariants = {
+    closed: {
+      opacity: 0,
+      y: "-100%",
+      transition: {
+        duration: 0.5,
+        ease: [0.22, 1, 0.36, 1] as [number, number, number, number],
+      },
+    },
+    open: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.5,
+        ease: [0.22, 1, 0.36, 1] as [number, number, number, number],
+      },
+    },
+  };
+
+  return (
+    <>
+      {/* Desktop Navigation */}
+      <nav className={styles.navDesktop}>
+        <span className={styles.brand}>Alicja Grzesiowska</span>
+        <ul className={styles.navLinks}>
+          <li>
+            <a href="/#challenges" className={styles.navLink}>Work</a>
+          </li>
+          <li>
+            <Link href={`/${lang}/about`} className={styles.navLink}>About</Link>
+          </li>
+          <li>
+            <a href="/#knowledge" className={styles.navLink}>Method</a>
+          </li>
+          <li>
+            <a href="/#perspectives" className={styles.navLink}>Perspectives</a>
+          </li>
+        </ul>
+        <a href="#contact" className={styles.navLink}>Contact</a>
+      </nav>
+
+      {/* Mobile Navigation */}
+      <nav className={styles.navMobile}>
+        <span className={styles.brand}>Alicja Grzesiowska</span>
+        <button className={styles.menuToggle} onClick={toggleMenu} aria-label="Toggle menu">
+          {isOpen ? <X size={24} /> : <Menu size={24} />}
+        </button>
+
+        <AnimatePresence>
+          {isOpen && (
+            <motion.div
+              className={styles.mobileMenu}
+              initial="closed"
+              animate="open"
+              exit="closed"
+              variants={menuVariants}
+            >
+              <ul className={styles.mobileNavLinks}>
+                <li>
+                  <a href="/#challenges" className={styles.mobileNavLink} onClick={toggleMenu}>
+                    Work
+                  </a>
+                </li>
+                <li>
+                  <Link href={`/${lang}/about`} className={styles.mobileNavLink} onClick={toggleMenu}>
+                    About
+                  </Link>
+                </li>
+                <li>
+                  <a href="/#knowledge" className={styles.mobileNavLink} onClick={toggleMenu}>
+                    Method
+                  </a>
+                </li>
+                <li>
+                  <a href="/#perspectives" className={styles.mobileNavLink} onClick={toggleMenu}>
+                    Perspectives
+                  </a>
+                </li>
+                <li>
+                  <a href="#contact" className={styles.mobileNavLink} onClick={toggleMenu}>
+                    Contact
+                  </a>
+                </li>
+              </ul>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </nav>
+    </>
+  );
+}

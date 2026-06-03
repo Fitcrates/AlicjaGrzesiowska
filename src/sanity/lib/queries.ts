@@ -1,0 +1,139 @@
+import { groq } from 'next-sanity'
+
+export const homePageQuery = groq`*[_type == "homePage"][0] {
+  "heroTopText": coalesce(select($lang == "pl" => pl.heroTopText, en.heroTopText), heroTopText),
+  "heroWords": coalesce(select($lang == "pl" => pl.heroWords, en.heroWords), heroWords),
+  "heroPrefix": select($lang == "pl" => pl.heroPrefix, en.heroPrefix),
+  "heroScrollLabel": select($lang == "pl" => pl.heroScrollLabel, en.heroScrollLabel),
+  "challengeIntroText": coalesce(select($lang == "pl" => pl.challengeIntroText, en.challengeIntroText), challengeIntroText),
+  "challengeIntroHeading": coalesce(select($lang == "pl" => pl.challengeIntroHeading, en.challengeIntroHeading), challengeIntroHeading),
+  "challengesSectionLabel": select($lang == "pl" => pl.challengesSectionLabel, en.challengesSectionLabel),
+  "challengeLabel": select($lang == "pl" => pl.challengeLabel, en.challengeLabel),
+  "relatedWorkLabel": select($lang == "pl" => pl.relatedWorkLabel, en.relatedWorkLabel),
+  "nextChallengeLabel": select($lang == "pl" => pl.nextChallengeLabel, en.nextChallengeLabel),
+  "knowledgeUnfixedTitle": coalesce(select($lang == "pl" => pl.knowledgeUnfixedTitle, en.knowledgeUnfixedTitle), knowledgeUnfixedTitle),
+  "knowledgeUnfixedDesc": coalesce(select($lang == "pl" => pl.knowledgeUnfixedDesc, en.knowledgeUnfixedDesc), knowledgeUnfixedDesc),
+  "knowledgeFixedTitle": coalesce(select($lang == "pl" => pl.knowledgeFixedTitle, en.knowledgeFixedTitle), knowledgeFixedTitle),
+  "knowledgeFixedDesc": coalesce(select($lang == "pl" => pl.knowledgeFixedDesc, en.knowledgeFixedDesc), knowledgeFixedDesc),
+  "knowledgeSectionLabel": select($lang == "pl" => pl.knowledgeSectionLabel, en.knowledgeSectionLabel),
+  "healthyEcosystemLabel": select($lang == "pl" => pl.healthyEcosystemLabel, en.healthyEcosystemLabel),
+  "brokenConnectionLabel": select($lang == "pl" => pl.brokenConnectionLabel, en.brokenConnectionLabel),
+  "duplicateSignalLabel": select($lang == "pl" => pl.duplicateSignalLabel, en.duplicateSignalLabel),
+  "modalTitle": select($lang == "pl" => pl.modalTitle, en.modalTitle),
+  "modalDescriptionPrefix": select($lang == "pl" => pl.modalDescriptionPrefix, en.modalDescriptionPrefix),
+  "modalDescriptionSuffix": select($lang == "pl" => pl.modalDescriptionSuffix, en.modalDescriptionSuffix),
+  "currentStateTitle": select($lang == "pl" => pl.currentStateTitle, en.currentStateTitle),
+  "currentStateDesc": select($lang == "pl" => pl.currentStateDesc, en.currentStateDesc),
+  "targetStateTitle": select($lang == "pl" => pl.targetStateTitle, en.targetStateTitle),
+  "targetStateDesc": select($lang == "pl" => pl.targetStateDesc, en.targetStateDesc),
+  "applyFixLabel": select($lang == "pl" => pl.applyFixLabel, en.applyFixLabel),
+  "resetLabel": select($lang == "pl" => pl.resetLabel, en.resetLabel),
+  "dataLabel": select($lang == "pl" => pl.dataLabel, en.dataLabel),
+  "storyLabel": select($lang == "pl" => pl.storyLabel, en.storyLabel),
+  "audienceLabel": select($lang == "pl" => pl.audienceLabel, en.audienceLabel),
+  "contextLabel": select($lang == "pl" => pl.contextLabel, en.contextLabel),
+  "designLabel": select($lang == "pl" => pl.designLabel, en.designLabel),
+  "hubUnfixedLine1": select($lang == "pl" => pl.hubUnfixedLine1, en.hubUnfixedLine1),
+  "hubUnfixedLine2": select($lang == "pl" => pl.hubUnfixedLine2, en.hubUnfixedLine2),
+  "hubFixedLine1": select($lang == "pl" => pl.hubFixedLine1, en.hubFixedLine1),
+  "hubFixedLine2": select($lang == "pl" => pl.hubFixedLine2, en.hubFixedLine2),
+  "modalQuote": select($lang == "pl" => pl.modalQuote, en.modalQuote),
+  "perspectivesSectionLabel": select($lang == "pl" => pl.perspectivesSectionLabel, en.perspectivesSectionLabel),
+  "exploreHowLabel": select($lang == "pl" => pl.exploreHowLabel, en.exploreHowLabel),
+  "closeLabel": select($lang == "pl" => pl.closeLabel, en.closeLabel),
+  "portfolioSectionLabel": select($lang == "pl" => pl.portfolioSectionLabel, en.portfolioSectionLabel),
+  "backToIndexLabel": select($lang == "pl" => pl.backToIndexLabel, en.backToIndexLabel),
+  "challengeSectionTitle": select($lang == "pl" => pl.challengeSectionTitle, en.challengeSectionTitle),
+  "approachSectionTitle": select($lang == "pl" => pl.approachSectionTitle, en.approachSectionTitle),
+  "processSectionTitle": select($lang == "pl" => pl.processSectionTitle, en.processSectionTitle),
+  "gallerySectionTitle": select($lang == "pl" => pl.gallerySectionTitle, en.gallerySectionTitle),
+  "deliverablesSectionTitle": select($lang == "pl" => pl.deliverablesSectionTitle, en.deliverablesSectionTitle),
+  "impactSectionTitle": select($lang == "pl" => pl.impactSectionTitle, en.impactSectionTitle),
+  "nextProjectLabel": select($lang == "pl" => pl.nextProjectLabel, en.nextProjectLabel),
+  "continueReadingLabel": select($lang == "pl" => pl.continueReadingLabel, en.continueReadingLabel),
+  "industryLabel": select($lang == "pl" => pl.industryLabel, en.industryLabel),
+  "yearLabel": select($lang == "pl" => pl.yearLabel, en.yearLabel),
+  "focusLabel": select($lang == "pl" => pl.focusLabel, en.focusLabel),
+  "viewCaseLabel": select($lang == "pl" => pl.viewCaseLabel, en.viewCaseLabel),
+  "contactSectionLabel": select($lang == "pl" => pl.contactSectionLabel, en.contactSectionLabel),
+  "footerTitle": coalesce(select($lang == "pl" => pl.footerTitle, en.footerTitle), footerTitle),
+  footerEmail,
+  "footerLocation": select($lang == "pl" => pl.footerLocation, en.footerLocation),
+  "footerTagline": select($lang == "pl" => pl.footerTagline, en.footerTagline),
+  "nameLabel": select($lang == "pl" => pl.nameLabel, en.nameLabel),
+  "emailLabel": select($lang == "pl" => pl.emailLabel, en.emailLabel),
+  "messageLabel": select($lang == "pl" => pl.messageLabel, en.messageLabel),
+  "sendingLabel": select($lang == "pl" => pl.sendingLabel, en.sendingLabel),
+  "sendMessageLabel": select($lang == "pl" => pl.sendMessageLabel, en.sendMessageLabel),
+  "formSuccessMessage": select($lang == "pl" => pl.formSuccessMessage, en.formSuccessMessage),
+  "formErrorMessage": select($lang == "pl" => pl.formErrorMessage, en.formErrorMessage),
+  "footerLinks": coalesce(select($lang == "pl" => pl.footerLinks, en.footerLinks), footerLinks)
+}`
+export const aboutPageQuery = groq`*[_type == "aboutPage"][0] {
+  "title": coalesce(select($lang == "pl" => pl.title, en.title), title),
+  "subtitle": coalesce(select($lang == "pl" => pl.subtitle, en.subtitle), subtitle),
+  "story": coalesce(select($lang == "pl" => pl.story[] { heading, body }, en.story[] { heading, body }), story[] { heading, body }),
+  "experienceTitle": coalesce(select($lang == "pl" => pl.experienceTitle, en.experienceTitle), experienceTitle),
+  "experience": coalesce(select($lang == "pl" => pl.experience[] { role, company, years }, en.experience[] { role, company, years }), experience[] { role, company, years }),
+  "projectsCtaTitle": coalesce(select($lang == "pl" => pl.projectsCtaTitle, en.projectsCtaTitle), projectsCtaTitle),
+  "profileImageUrl": profileImage.asset->url
+}`
+
+export const challengesQuery = groq`*[_type == "challenge"] | order(number asc) {
+  _id,
+  "title": coalesce(select($lang == "pl" => pl.title, en.title), title),
+  number,
+  "pathHero": coalesce(select($lang == "pl" => pl.pathHero, en.pathHero), pathHero),
+  "pathContent": coalesce(select($lang == "pl" => pl.pathContent[] { heading, body }, en.pathContent[] { heading, body }), pathContent[] { heading, body }),
+  "relatedCases": relatedCases[]->slug.current,
+  "nextChallengeId": nextChallenge->_id
+}`
+
+export const investigationCardsQuery = groq`*[_type == "investigationCard"] | order(number asc) {
+  _id,
+  number,
+  "category": coalesce(select($lang == "pl" => pl.category, en.category), category),
+  "title": coalesce(select($lang == "pl" => pl.title, en.title), title),
+  "backTitle": coalesce(select($lang == "pl" => pl.backTitle, en.backTitle), backTitle),
+  "backContent": coalesce(select($lang == "pl" => pl.backContent, en.backContent), backContent)
+}`
+
+export const caseStudiesQuery = groq`*[_type == "caseStudy"] | order(year desc) {
+  _id,
+  _type,
+  "slug": slug.current,
+  "title": coalesce(select($lang == "pl" => pl.title, en.title), title),
+  "industry": coalesce(select($lang == "pl" => pl.industry, en.industry), industry),
+  year,
+  "focus": coalesce(select($lang == "pl" => pl.focus, en.focus), focus),
+  "heroQuote": coalesce(select($lang == "pl" => pl.heroQuote, en.heroQuote), heroQuote),
+  "challenge": coalesce(select($lang == "pl" => pl.challenge, en.challenge), challenge),
+  "approach": coalesce(select($lang == "pl" => pl.approach, en.approach), approach),
+  "process": coalesce(select($lang == "pl" => pl.process[] { number, title, description }, en.process[] { number, title, description }), process[] { number, title, description }),
+  "deliverables": coalesce(select($lang == "pl" => pl.deliverables, en.deliverables), deliverables),
+  "results": coalesce(select($lang == "pl" => pl.results, en.results), results),
+  "galleryUrls": coalesce(galleryUrls, gallery[].asset->url),
+  "nextCase": nextCase->slug.current
+}`
+
+export const allCaseSlugsQuery = groq`*[_type == "caseStudy"] | order(year desc) {
+  "slug": slug.current
+}`
+
+export const caseStudyBySlugQuery = groq`*[_type == "caseStudy" && slug.current == $slug][0] {
+  _id,
+  _type,
+  "slug": slug.current,
+  "title": coalesce(select($lang == "pl" => pl.title, en.title), title),
+  "industry": coalesce(select($lang == "pl" => pl.industry, en.industry), industry),
+  year,
+  "focus": coalesce(select($lang == "pl" => pl.focus, en.focus), focus),
+  "heroQuote": coalesce(select($lang == "pl" => pl.heroQuote, en.heroQuote), heroQuote),
+  "challenge": coalesce(select($lang == "pl" => pl.challenge, en.challenge), challenge),
+  "approach": coalesce(select($lang == "pl" => pl.approach, en.approach), approach),
+  "process": coalesce(select($lang == "pl" => pl.process[] { number, title, description }, en.process[] { number, title, description }), process[] { number, title, description }),
+  "deliverables": coalesce(select($lang == "pl" => pl.deliverables, en.deliverables), deliverables),
+  "results": coalesce(select($lang == "pl" => pl.results, en.results), results),
+  "galleryUrls": coalesce(galleryUrls, gallery[].asset->url),
+  "nextCase": nextCase->slug.current
+}`
