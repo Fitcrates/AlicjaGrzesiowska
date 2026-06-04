@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import { sanityFetch } from "@/sanity/lib/fetch";
+import { sanityCacheTags } from "@/sanity/lib/client";
 import { aboutPageQuery, homePageQuery, caseStudiesQuery } from "@/sanity/lib/queries";
 import type { AboutPage, HomePage, PortfolioCase } from "@/sanity/lib/types";
 import { getLocale, locales } from "@/lib/i18n";
@@ -19,7 +20,8 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
   
   const aboutPage = await sanityFetch<AboutPage | null>({ 
     query: aboutPageQuery, 
-    params: { lang: locale } 
+    params: { lang: locale },
+    tags: [sanityCacheTags.aboutPage],
   });
 
   if (!aboutPage) return { title: "About" };
@@ -38,9 +40,9 @@ export default async function AboutPage({ params }: { params: Promise<{ lang: st
   const queryParams = { lang: locale };
 
   const [aboutPage, homePage, cases] = await Promise.all([
-    sanityFetch<AboutPage | null>({ query: aboutPageQuery, params: queryParams }),
-    sanityFetch<HomePage | null>({ query: homePageQuery, params: queryParams }),
-    sanityFetch<PortfolioCase[]>({ query: caseStudiesQuery, params: queryParams }),
+    sanityFetch<AboutPage | null>({ query: aboutPageQuery, params: queryParams, tags: [sanityCacheTags.aboutPage] }),
+    sanityFetch<HomePage | null>({ query: homePageQuery, params: queryParams, tags: [sanityCacheTags.homePage] }),
+    sanityFetch<PortfolioCase[]>({ query: caseStudiesQuery, params: queryParams, tags: [sanityCacheTags.caseStudy] }),
   ]);
 
   // Removed if (!aboutPage) notFound() so the page works even before the document is published in Sanity

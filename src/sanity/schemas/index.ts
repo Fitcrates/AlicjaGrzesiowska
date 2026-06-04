@@ -6,4 +6,5 @@ import homePage from './homePage'
 import aboutPage from './aboutPage'
 
 export const schemaTypes = [homePage, aboutPage, caseStudy, challenge, investigationCard]
+export const sanitySchemaTypeNames = schemaTypes.map((schemaType) => schemaType.name)
 

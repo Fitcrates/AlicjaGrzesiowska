@@ -1,4 +1,4 @@
-import HeroSwitcher from "@/components/sections/HeroSwitcher";
+import HeroV2 from "@/components/sections/HeroV2";
 import ChallengeSelection from "@/components/sections/ChallengeSelection";
 import ScatteredKnowledge from "@/components/sections/ScatteredKnowledge";
 import InvestigationCards from "@/components/sections/InvestigationCards";
@@ -6,6 +6,7 @@ import PortfolioGrid from "@/components/sections/PortfolioGrid";
 import ContactFooter from "@/components/sections/ContactFooter";
 
 import { sanityFetch } from "@/sanity/lib/fetch";
+import { sanityCacheTags } from "@/sanity/lib/client";
 import { homePageQuery, challengesQuery, investigationCardsQuery, caseStudiesQuery } from "@/sanity/lib/queries";
 import type { Challenge, HomePage, InvestigationCard, PortfolioCase } from "@/sanity/lib/types";
 import { getLocale, locales } from "@/lib/i18n";
@@ -23,15 +24,15 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
   const queryParams = { lang: locale };
 
   const [homePage, challenges, investigationCards, cases] = await Promise.all([
-    sanityFetch<HomePage | null>({ query: homePageQuery, params: queryParams }),
-    sanityFetch<Challenge[]>({ query: challengesQuery, params: queryParams }),
-    sanityFetch<InvestigationCard[]>({ query: investigationCardsQuery, params: queryParams }),
-    sanityFetch<PortfolioCase[]>({ query: caseStudiesQuery, params: queryParams }),
+    sanityFetch<HomePage | null>({ query: homePageQuery, params: queryParams, tags: [sanityCacheTags.homePage] }),
+    sanityFetch<Challenge[]>({ query: challengesQuery, params: queryParams, tags: [sanityCacheTags.challenge] }),
+    sanityFetch<InvestigationCard[]>({ query: investigationCardsQuery, params: queryParams, tags: [sanityCacheTags.investigationCard] }),
+    sanityFetch<PortfolioCase[]>({ query: caseStudiesQuery, params: queryParams, tags: [sanityCacheTags.caseStudy] }),
   ]);
 
   return (
     <>
-      <HeroSwitcher data={homePage} />
+      <HeroV2 data={homePage} />
       <ChallengeSelection data={homePage} challenges={challenges} cases={cases} locale={locale} />
       <ScatteredKnowledge data={homePage} />
       <InvestigationCards cards={investigationCards} data={homePage} />

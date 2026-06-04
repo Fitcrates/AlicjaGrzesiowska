@@ -5,6 +5,7 @@ import { getAllSlugs, getCaseBySlug } from "@/sanity/lib/cases";
 import CaseStudyContent from "@/components/case-study/CaseStudyContent";
 import ContactFooter from "@/components/sections/ContactFooter";
 import { sanityFetch } from "@/sanity/lib/fetch";
+import { sanityCacheTags } from "@/sanity/lib/client";
 import { homePageQuery } from "@/sanity/lib/queries";
 import type { HomePage } from "@/sanity/lib/types";
 import { getLocale, locales } from "@/lib/i18n";
@@ -47,6 +48,7 @@ export default async function CaseStudyPage({
   const homePage = await sanityFetch<HomePage | null>({
     query: homePageQuery,
     params: { lang: locale },
+    tags: [sanityCacheTags.homePage],
   });
 
   return (
