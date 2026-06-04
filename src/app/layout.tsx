@@ -43,7 +43,7 @@ export default async function RootLayout({
         <Navbar />
         <main>{children}</main>
         <SanityLive includeDrafts={isPreview} />
-        {isPreview && <VisualEditing />}
+        <VisualEditing />
       </body>
     </html>
   );
