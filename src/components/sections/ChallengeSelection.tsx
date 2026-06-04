@@ -120,7 +120,6 @@ export default function ChallengeSelection({
   const introHeading = data?.challengeIntroHeading || "Choose your challenge:";
   const sectionLabel = data?.challengesSectionLabel || "Challenges";
   const singleChallengeLabel = data?.challengeLabel || "Challenge";
-  const relatedWorkLabelText = data?.relatedWorkLabel || "Related Work";
   const nextChallengeLabelText = data?.nextChallengeLabel || "Next Challenge";
 
   const selectedChallenge = activeChallenges.find((c) => c._id === selectedId || c.id === selectedId);

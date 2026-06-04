@@ -1,6 +1,8 @@
 import { groq } from 'next-sanity'
 
 export const homePageQuery = groq`*[_type == "homePage"][0] {
+  _id,
+  _type,
   "heroTopText": coalesce(select($lang == "pl" => pl.heroTopText, en.heroTopText), heroTopText),
   "heroWords": coalesce(select($lang == "pl" => pl.heroWords, en.heroWords), heroWords),
   "heroPrefix": select($lang == "pl" => pl.heroPrefix, en.heroPrefix),
@@ -69,7 +71,9 @@ export const homePageQuery = groq`*[_type == "homePage"][0] {
   "formErrorMessage": select($lang == "pl" => pl.formErrorMessage, en.formErrorMessage),
   "footerLinks": coalesce(select($lang == "pl" => pl.footerLinks, en.footerLinks), footerLinks)
 }`
-export const aboutPageQuery = groq`*[_type == "aboutPage"][0] {
+export const aboutPageQuery = groq`*[_type == "aboutPage"][0] {
+  _id,
+  _type,
   "title": coalesce(select($lang == "pl" => pl.title, en.title), title),
   "subtitle": coalesce(select($lang == "pl" => pl.subtitle, en.subtitle), subtitle),
   "story": coalesce(select($lang == "pl" => pl.story[] { heading, body }, en.story[] { heading, body }), story[] { heading, body }),

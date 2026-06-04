@@ -13,6 +13,10 @@ const mainDocuments = defineDocuments([
     type: 'homePage',
   },
   {
+    route: ['/en/about', '/pl/about'],
+    type: 'aboutPage',
+  },
+  {
     route: caseRoutes,
     filter: `_type == "caseStudy" && slug.current == $slug`,
   },
@@ -21,6 +25,22 @@ const mainDocuments = defineDocuments([
 const locations: DocumentLocationResolvers = {
   homePage: defineLocations({
     message: 'This document is used on the localized home pages.',
+    resolve: () => ({
+      locations: [
+        { title: 'English home page', href: '/en' },
+        { title: 'Polish home page', href: '/pl' },
+      ],
+    }),
+    tone: 'positive',
+  }),
+  aboutPage: defineLocations({
+    message: 'This document is used on the localized about pages.',
+    resolve: () => ({
+      locations: [
+        { title: 'English about page', href: '/en/about' },
+        { title: 'Polish about page', href: '/pl/about' },
+      ],
+    }),
     tone: 'positive',
   }),
   challenge: defineLocations({

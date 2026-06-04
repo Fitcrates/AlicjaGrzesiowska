@@ -146,9 +146,6 @@ export default function ScatteredKnowledge({ data }: { data?: HomePage | null })
                 const bothFixed = isFixed(conn.from) && isFixed(conn.to);
                 const type = bothFixed ? "healthy" : conn.unfixedType;
 
-                const midX = (fromPos.x + toPos.x) / 2;
-                const midY = (fromPos.y + toPos.y) / 2;
-
                 if (type === "healthy") {
                   return (
                     <motion.line

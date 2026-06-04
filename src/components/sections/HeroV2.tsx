@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, type CSSProperties } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { 
   Bold, Italic, Underline, Strikethrough, 
@@ -9,6 +9,16 @@ import {
 } from "lucide-react";
 import type { HomePage } from "@/sanity/lib/types";
 import styles from "./HeroV2.module.css";
+
+type TextAlign = NonNullable<CSSProperties["textAlign"]>;
+type EditorFormat = {
+  bold: boolean;
+  italic: boolean;
+  underline: boolean;
+  strikethrough: boolean;
+  align: TextAlign;
+  list: "none" | "ul" | "ol";
+};
 
 function Typewriter({
   text,
@@ -74,13 +84,13 @@ export default function HeroV2({ data }: { data?: HomePage | null }) {
   const [isDarkMode, setIsDarkMode] = useState(false);
 
   // Text formatting state
-  const [format, setFormat] = useState({
+  const [format, setFormat] = useState<EditorFormat>({
     bold: false,
     italic: false,
     underline: false,
     strikethrough: false,
-    align: 'left', // 'left' | 'center' | 'right' | 'justify'
-    list: 'none' as 'none' | 'ul' | 'ol'
+    align: 'left',
+    list: 'none'
   });
 
   const topText = data?.heroTopText || "No organization has a solely content problem.\nIt has an information problem.";
@@ -115,7 +125,7 @@ export default function HeroV2({ data }: { data?: HomePage | null }) {
     setFormat(prev => ({ ...prev, [key]: !prev[key] }));
   };
 
-  const setAlign = (align: string) => {
+  const setAlign = (align: TextAlign) => {
     setFormat(prev => ({ ...prev, align }));
   };
 
@@ -229,7 +239,7 @@ export default function HeroV2({ data }: { data?: HomePage | null }) {
 
         {/* Editor Content Area */}
         <div className={styles.editorContent}>
-          <div className={styles.heroProblemContainer} style={{ textAlign: format.align as any }}>
+          <div className={styles.heroProblemContainer} style={{ textAlign: format.align }}>
             <motion.p
               className={styles.heroProblemText}
               initial={{ opacity: 0 }}

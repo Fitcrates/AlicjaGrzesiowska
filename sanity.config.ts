@@ -8,6 +8,27 @@ import { presentationTool } from 'sanity/presentation'
 import { resolve } from './src/sanity/presentation/resolve'
 import { schemaTypes } from './src/sanity/schemas'
 
+function normalizeOrigin(value: string | undefined) {
+  if (!value) return undefined
+
+  try {
+    const url = new URL(value.startsWith('http') ? value : `https://${value}`)
+    return url.origin
+  } catch {
+    return undefined
+  }
+}
+
+function splitOrigins(value: string | undefined) {
+  return value
+    ?.split(',')
+    .map((origin) => {
+      const trimmed = origin.trim()
+      return trimmed.includes('*') ? trimmed : normalizeOrigin(trimmed)
+    })
+    .filter((origin): origin is string => Boolean(origin)) ?? []
+}
+
 const projectId =
   process.env.SANITY_STUDIO_PROJECT_ID ||
   process.env.NEXT_PUBLIC_SANITY_PROJECT_ID ||
@@ -21,7 +42,23 @@ const siteUrl =
   process.env.SANITY_STUDIO_SITE_URL ||
   process.env.NEXT_PUBLIC_SITE_URL ||
   'http://localhost:3000'
-const previewOrigin = siteUrl.replace(/\/$/, '')
+const previewOrigin = normalizeOrigin(siteUrl) || 'http://localhost:3000'
+const vercelOrigin = normalizeOrigin(
+  process.env.SANITY_STUDIO_VERCEL_URL ||
+    process.env.NEXT_PUBLIC_VERCEL_URL ||
+    process.env.VERCEL_URL
+)
+const allowedPreviewOrigins = Array.from(
+  new Set([
+    'http://localhost:*',
+    'https://localhost:*',
+    previewOrigin,
+    normalizeOrigin(process.env.SANITY_STUDIO_SITE_URL),
+    normalizeOrigin(process.env.NEXT_PUBLIC_SITE_URL),
+    vercelOrigin,
+    ...splitOrigins(process.env.SANITY_STUDIO_ALLOWED_ORIGINS),
+  ].filter((origin): origin is string => Boolean(origin)))
+)
 
 export default defineConfig({
   name: 'default',
@@ -63,11 +100,11 @@ export default defineConfig({
       previewUrl: {
         initial: `${previewOrigin}/en`,
         previewMode: {
-          enable: `${previewOrigin}/api/draft-mode/enable`,
-          disable: `${previewOrigin}/api/draft-mode/disable`,
+          enable: '/api/draft-mode/enable',
+          disable: '/api/draft-mode/disable',
         },
       },
-      allowOrigins: ['http://localhost:*', 'https://localhost:*', previewOrigin],
+      allowOrigins: allowedPreviewOrigins,
     }),
     visionTool(),
     media(),

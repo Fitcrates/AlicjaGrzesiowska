@@ -40,19 +40,19 @@ export default function Navbar() {
         <span className={styles.brand}>Alicja Grzesiowska</span>
         <ul className={styles.navLinks}>
           <li>
-            <a href="/#challenges" className={styles.navLink}>Work</a>
+            <Link href={`/${lang}#challenges`} className={styles.navLink}>Work</Link>
           </li>
           <li>
             <Link href={`/${lang}/about`} className={styles.navLink}>About</Link>
           </li>
           <li>
-            <a href="/#knowledge" className={styles.navLink}>Method</a>
+            <Link href={`/${lang}#knowledge`} className={styles.navLink}>Method</Link>
           </li>
           <li>
-            <a href="/#perspectives" className={styles.navLink}>Perspectives</a>
+            <Link href={`/${lang}#perspectives`} className={styles.navLink}>Perspectives</Link>
           </li>
         </ul>
-        <a href="#contact" className={styles.navLink}>Contact</a>
+        <Link href={`/${lang}#contact`} className={styles.navLink}>Contact</Link>
       </nav>
 
       {/* Mobile Navigation */}
@@ -73,9 +73,9 @@ export default function Navbar() {
             >
               <ul className={styles.mobileNavLinks}>
                 <li>
-                  <a href="/#challenges" className={styles.mobileNavLink} onClick={toggleMenu}>
+                  <Link href={`/${lang}#challenges`} className={styles.mobileNavLink} onClick={toggleMenu}>
                     Work
-                  </a>
+                  </Link>
                 </li>
                 <li>
                   <Link href={`/${lang}/about`} className={styles.mobileNavLink} onClick={toggleMenu}>
@@ -83,19 +83,19 @@ export default function Navbar() {
                   </Link>
                 </li>
                 <li>
-                  <a href="/#knowledge" className={styles.mobileNavLink} onClick={toggleMenu}>
+                  <Link href={`/${lang}#knowledge`} className={styles.mobileNavLink} onClick={toggleMenu}>
                     Method
-                  </a>
+                  </Link>
                 </li>
                 <li>
-                  <a href="/#perspectives" className={styles.mobileNavLink} onClick={toggleMenu}>
+                  <Link href={`/${lang}#perspectives`} className={styles.mobileNavLink} onClick={toggleMenu}>
                     Perspectives
-                  </a>
+                  </Link>
                 </li>
                 <li>
-                  <a href="#contact" className={styles.mobileNavLink} onClick={toggleMenu}>
+                  <Link href={`/${lang}#contact`} className={styles.mobileNavLink} onClick={toggleMenu}>
                     Contact
-                  </a>
+                  </Link>
                 </li>
               </ul>
             </motion.div>

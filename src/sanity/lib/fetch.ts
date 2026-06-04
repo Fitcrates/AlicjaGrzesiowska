@@ -1,6 +1,12 @@
 import 'server-only'
 
 import type { QueryParams } from 'next-sanity'
+import { PHASE_PRODUCTION_BUILD } from 'next/constants'
+import { cookies, draftMode } from 'next/headers'
+import {
+  resolvePerspectiveFromCookies,
+  type LivePerspective,
+} from 'next-sanity/live'
 import { client, sanityCacheTags } from './client'
 import { sanityLiveFetch } from './live'
 
@@ -9,6 +15,27 @@ const DEFAULT_TAGS = [sanityCacheTags.all]
 
 function resolveTags(tags: string[]) {
   return Array.from(new Set([...DEFAULT_TAGS, ...tags]))
+}
+
+async function resolveLiveFetchOptions(): Promise<{
+  perspective: LivePerspective
+  stega: boolean
+}> {
+  if (process.env.NEXT_PHASE === PHASE_PRODUCTION_BUILD) {
+    return { perspective: 'published', stega: false }
+  }
+
+  const { isEnabled } = await draftMode()
+
+  if (!isEnabled) {
+    return { perspective: 'published', stega: false }
+  }
+
+  const perspective =
+    (await resolvePerspectiveFromCookies({ cookies: await cookies() })) ??
+    'drafts'
+
+  return { perspective, stega: true }
 }
 
 export async function sanityFetch<QueryResponse>({
@@ -24,6 +51,7 @@ export async function sanityFetch<QueryResponse>({
     query,
     params,
     tags: resolveTags(tags),
+    ...(await resolveLiveFetchOptions()),
   })
 
   return data as QueryResponse
