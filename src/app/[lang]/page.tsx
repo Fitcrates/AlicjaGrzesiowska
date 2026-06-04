@@ -32,10 +32,10 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
 
   return (
     <>
-      <HeroV2 data={homePage} />
+      <HeroV2 data={homePage} locale={locale} />
       <ChallengeSelection data={homePage} challenges={challenges} cases={cases} locale={locale} />
-      <ScatteredKnowledge data={homePage} />
-      <InvestigationCards cards={investigationCards} data={homePage} />
+      <ScatteredKnowledge data={homePage} locale={locale} />
+      <InvestigationCards cards={investigationCards} data={homePage} locale={locale} />
       <PortfolioGrid cases={cases} data={homePage} locale={locale} />
       <ContactFooter data={homePage} locale={locale} />
     </>

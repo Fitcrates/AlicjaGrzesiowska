@@ -5,6 +5,11 @@ import { motion } from "framer-motion";
 import type { HomePage } from "@/sanity/lib/types";
 import styles from "./ContactFooter.module.css";
 import { defaultLocale, type Locale } from "@/lib/i18n";
+import {
+  localizedSanityPath,
+  sanityDataAttribute,
+  type SanityPath,
+} from "@/sanity/visual-editing";
 
 export default function ContactFooter({ data, locale = defaultLocale }: { data?: HomePage | null; locale?: Locale }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -23,6 +28,20 @@ export default function ContactFooter({ data, locale = defaultLocale }: { data?:
   const footerLocation = data?.footerLocation || "Warsaw, PL";
   const footerTagline = data?.footerTagline || "Information Architecture & Content Strategy";
   const footerLinks = data?.footerLinks || [];
+  const homeId = data?._id || "homePage";
+  const homeType = data?._type || "homePage";
+  const homeAttr = (path: SanityPath) =>
+    sanityDataAttribute({
+      id: homeId,
+      type: homeType,
+      path: localizedSanityPath(locale, path),
+    });
+  const homeRootAttr = (path: SanityPath) =>
+    sanityDataAttribute({
+      id: homeId,
+      type: homeType,
+      path,
+    });
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -57,7 +76,9 @@ export default function ContactFooter({ data, locale = defaultLocale }: { data?:
       <section id="contact" className={styles.section}>
         <div className={styles.sectionHeader}>
           <span className={styles.sectionNumber}>05</span>
-          <span className={styles.sectionLabel}>{sectionLabel}</span>
+          <span className={styles.sectionLabel} data-sanity={homeAttr("contactSectionLabel")}>
+            {sectionLabel}
+          </span>
         </div>
 
         <div className={styles.content}>
@@ -67,7 +88,7 @@ export default function ContactFooter({ data, locale = defaultLocale }: { data?:
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
           >
-            <h2 className={styles.heading}>
+            <h2 className={styles.heading} data-sanity={homeAttr("footerTitle")}>
               {title.split('\n').map((line: string, i: number) => (
                 <span key={i}>
                   {line}
@@ -80,41 +101,51 @@ export default function ContactFooter({ data, locale = defaultLocale }: { data?:
           <div className={styles.right}>
             <form className={styles.contactForm} onSubmit={handleSubmit}>
               <div className={styles.formGroup}>
-                <label htmlFor="name" className={styles.label}>{nameLabel}</label>
+                <label htmlFor="name" className={styles.label} data-sanity={homeAttr("nameLabel")}>
+                  {nameLabel}
+                </label>
                 <input type="text" id="name" name="name" required className={styles.input} />
               </div>
 
               <div className={styles.formGroup}>
-                <label htmlFor="email" className={styles.label}>{emailLabel}</label>
+                <label htmlFor="email" className={styles.label} data-sanity={homeAttr("emailLabel")}>
+                  {emailLabel}
+                </label>
                 <input type="email" id="email" name="email" required className={styles.input} />
               </div>
 
               <div className={styles.formGroup}>
-                <label htmlFor="message" className={styles.label}>{messageLabel}</label>
+                <label htmlFor="message" className={styles.label} data-sanity={homeAttr("messageLabel")}>
+                  {messageLabel}
+                </label>
                 <textarea id="message" name="message" required className={styles.textarea}></textarea>
               </div>
 
               <button type="submit" disabled={isSubmitting} className={styles.submitBtn}>
-                {isSubmitting ? sendingLabel : sendMessageLabel}
+                <span data-sanity={homeAttr(isSubmitting ? "sendingLabel" : "sendMessageLabel")}>
+                  {isSubmitting ? sendingLabel : sendMessageLabel}
+                </span>
               </button>
 
               {formStatus === "success" && (
                 <span className={styles.label} style={{ color: "var(--color-accent)" }}>
-                  {formSuccessMessage}
+                  <span data-sanity={homeAttr("formSuccessMessage")}>{formSuccessMessage}</span>
                 </span>
               )}
               {formStatus === "error" && (
                 <span className={styles.label} style={{ color: "var(--color-terracotta)" }}>
-                  {formErrorMessage}
+                  <span data-sanity={homeAttr("formErrorMessage")}>{formErrorMessage}</span>
                 </span>
               )}
             </form>
 
             <div className={styles.contactInfo} style={{ marginTop: "var(--spacing-xl)" }}>
-              <a href={`mailto:${email}`} className={styles.contactLink}>
+              <a href={`mailto:${email}`} className={styles.contactLink} data-sanity={homeRootAttr("footerEmail")}>
                 {email}
               </a>
-              <p className={styles.contactAddress}>{footerLocation}</p>
+              <p className={styles.contactAddress} data-sanity={homeAttr("footerLocation")}>
+                {footerLocation}
+              </p>
               {footerLinks.length > 0 && (
                 <div className={styles.socialLinks}>
                   {footerLinks.map((link, i) => (
@@ -124,6 +155,7 @@ export default function ContactFooter({ data, locale = defaultLocale }: { data?:
                       target="_blank"
                       rel="noopener noreferrer"
                       className={styles.socialLink}
+                      data-sanity={homeAttr(["footerLinks", i, "label"])}
                     >
                       {link.label}
                     </a>
@@ -138,7 +170,8 @@ export default function ContactFooter({ data, locale = defaultLocale }: { data?:
       <footer className={styles.footer}>
         <div className={styles.footerLeft}>
           <span className={styles.footerText}>
-            &copy; {new Date().getFullYear()} Alicja Grzesiowska. {footerTagline}
+            &copy; {new Date().getFullYear()} Alicja Grzesiowska.{" "}
+            <span data-sanity={homeAttr("footerTagline")}>{footerTagline}</span>
           </span>
         </div>
         <div className={styles.footerRight}>

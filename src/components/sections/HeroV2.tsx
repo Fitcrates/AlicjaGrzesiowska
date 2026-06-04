@@ -7,7 +7,13 @@ import {
   AlignLeft, AlignCenter, AlignRight, AlignJustify,
   List, ListOrdered, Moon, Sun
 } from "lucide-react";
+import { defaultLocale, type Locale } from "@/lib/i18n";
 import type { HomePage } from "@/sanity/lib/types";
+import {
+  localizedSanityPath,
+  sanityDataAttribute,
+  type SanityPath,
+} from "@/sanity/visual-editing";
 import styles from "./HeroV2.module.css";
 
 type TextAlign = NonNullable<CSSProperties["textAlign"]>;
@@ -79,7 +85,13 @@ function Typewriter({
   );
 }
 
-export default function HeroV2({ data }: { data?: HomePage | null }) {
+export default function HeroV2({
+  data,
+  locale = defaultLocale,
+}: {
+  data?: HomePage | null;
+  locale?: Locale;
+}) {
   const [phase, setPhase] = useState(0);
   const [isDarkMode, setIsDarkMode] = useState(false);
 
@@ -104,6 +116,14 @@ export default function HeroV2({ data }: { data?: HomePage | null }) {
   ];
   const heroPrefix = data?.heroPrefix || "I help";
   const heroScrollLabel = data?.heroScrollLabel || "Scroll to explore ↓";
+  const homeId = data?._id || "homePage";
+  const homeType = data?._type || "homePage";
+  const editAttr = (path: SanityPath) =>
+    sanityDataAttribute({
+      id: homeId,
+      type: homeType,
+      path: localizedSanityPath(locale, path),
+    });
 
   useEffect(() => {
     let timeoutId: NodeJS.Timeout;
@@ -242,6 +262,7 @@ export default function HeroV2({ data }: { data?: HomePage | null }) {
           <div className={styles.heroProblemContainer} style={{ textAlign: format.align }}>
             <motion.p
               className={styles.heroProblemText}
+              data-sanity={editAttr("heroTopText")}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 1 }}
@@ -273,12 +294,19 @@ export default function HeroV2({ data }: { data?: HomePage | null }) {
               style={{ ...dynamicTextStyle, justifyContent: getJustifyContent() }}
             >
               {renderListMarker(0)}
-              <motion.span layout style={{ marginRight: "0.2em" }}>{heroPrefix}</motion.span>
+              <motion.span
+                layout
+                data-sanity={editAttr("heroPrefix")}
+                style={{ marginRight: "0.2em" }}
+              >
+                {heroPrefix}
+              </motion.span>
               <AnimatePresence mode="popLayout">
                 {phase < 2 ? (
                   <motion.span
                     key={words[0]}
                     className={styles.draftWord}
+                    data-sanity={editAttr(["heroWords", 0])}
                     layout
                     exit={{ opacity: 0, y: 10 }}
                     transition={{ duration: 0.3 }}
@@ -297,6 +325,7 @@ export default function HeroV2({ data }: { data?: HomePage | null }) {
                   <motion.span
                     key={words[1]}
                     className={styles.finalWord}
+                    data-sanity={editAttr(["heroWords", 1])}
                     layout
                   >
                     <Typewriter
@@ -323,7 +352,11 @@ export default function HeroV2({ data }: { data?: HomePage | null }) {
                   style={{ ...dynamicTextStyle, justifyContent: getJustifyContent() }}
                 >
                   {renderListMarker(1)}
-                  <motion.span className={styles.draftWord} layout>
+                  <motion.span
+                    className={styles.draftWord}
+                    data-sanity={editAttr(["heroWords", 2])}
+                    layout
+                  >
                     {words[2]}
                     {phase >= 4 && (
                       <motion.span
@@ -344,11 +377,13 @@ export default function HeroV2({ data }: { data?: HomePage | null }) {
                 >
                   {renderListMarker(1)}
                   {phase >= 5 && (
+                    <span data-sanity={editAttr(["heroWords", 3])}>
                     <Typewriter
                       text={words[3]}
                       onComplete={() => setPhase(6)}
                       showCursor={phase === 5}
                     />
+                    </span>
                   )}
                 </motion.div>
               )}
@@ -364,18 +399,22 @@ export default function HeroV2({ data }: { data?: HomePage | null }) {
                   style={{ ...dynamicTextStyle, justifyContent: getJustifyContent() }}
                 >
                   {renderListMarker(2)}
+                  <span data-sanity={editAttr(["heroWords", 4])}>
                   <Typewriter
                     text={words[4] + " "}
                     onComplete={() => setPhase(7)}
                     showCursor={phase === 6}
                   />
+                  </span>
                   {phase >= 7 && (
+                    <span data-sanity={editAttr(["heroWords", 5])}>
                     <Typewriter
                       text={words[5]}
                       italic
                       onComplete={() => setPhase(8)}
                       showCursor={phase >= 7}
                     />
+                    </span>
                   )}
                 </motion.div>
               )}
@@ -397,7 +436,9 @@ export default function HeroV2({ data }: { data?: HomePage | null }) {
         animate={{ opacity: 1 }}
         transition={{ delay: 1, duration: 0.6 }}
       >
-        <span className={styles.scrollIndicator}>{heroScrollLabel}</span>
+        <span className={styles.scrollIndicator} data-sanity={editAttr("heroScrollLabel")}>
+          {heroScrollLabel}
+        </span>
       </motion.div>
     </section>
   );

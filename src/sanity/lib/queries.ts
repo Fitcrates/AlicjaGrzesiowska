@@ -76,25 +76,27 @@ export const aboutPageQuery = groq`*[_type == "aboutPage"][0] {
   _type,
   "title": coalesce(select($lang == "pl" => pl.title, en.title), title),
   "subtitle": coalesce(select($lang == "pl" => pl.subtitle, en.subtitle), subtitle),
-  "story": coalesce(select($lang == "pl" => pl.story[] { heading, body }, en.story[] { heading, body }), story[] { heading, body }),
+  "story": coalesce(select($lang == "pl" => pl.story[] { _key, heading, body }, en.story[] { _key, heading, body }), story[] { _key, heading, body }),
   "experienceTitle": coalesce(select($lang == "pl" => pl.experienceTitle, en.experienceTitle), experienceTitle),
-  "experience": coalesce(select($lang == "pl" => pl.experience[] { role, company, years }, en.experience[] { role, company, years }), experience[] { role, company, years }),
+  "experience": coalesce(select($lang == "pl" => pl.experience[] { _key, role, company, years }, en.experience[] { _key, role, company, years }), experience[] { _key, role, company, years }),
   "projectsCtaTitle": coalesce(select($lang == "pl" => pl.projectsCtaTitle, en.projectsCtaTitle), projectsCtaTitle),
   "profileImageUrl": profileImage.asset->url
 }`
 
 export const challengesQuery = groq`*[_type == "challenge"] | order(number asc) {
   _id,
+  _type,
   "title": coalesce(select($lang == "pl" => pl.title, en.title), title),
   number,
   "pathHero": coalesce(select($lang == "pl" => pl.pathHero, en.pathHero), pathHero),
-  "pathContent": coalesce(select($lang == "pl" => pl.pathContent[] { heading, body }, en.pathContent[] { heading, body }), pathContent[] { heading, body }),
+  "pathContent": coalesce(select($lang == "pl" => pl.pathContent[] { _key, heading, body }, en.pathContent[] { _key, heading, body }), pathContent[] { _key, heading, body }),
   "relatedCases": relatedCases[]->slug.current,
   "nextChallengeId": nextChallenge->_id
 }`
 
 export const investigationCardsQuery = groq`*[_type == "investigationCard"] | order(number asc) {
   _id,
+  _type,
   number,
   "category": coalesce(select($lang == "pl" => pl.category, en.category), category),
   "title": coalesce(select($lang == "pl" => pl.title, en.title), title),
@@ -113,7 +115,7 @@ export const caseStudiesQuery = groq`*[_type == "caseStudy"] | order(year desc) 
   "heroQuote": coalesce(select($lang == "pl" => pl.heroQuote, en.heroQuote), heroQuote),
   "challenge": coalesce(select($lang == "pl" => pl.challenge, en.challenge), challenge),
   "approach": coalesce(select($lang == "pl" => pl.approach, en.approach), approach),
-  "process": coalesce(select($lang == "pl" => pl.process[] { number, title, description }, en.process[] { number, title, description }), process[] { number, title, description }),
+  "process": coalesce(select($lang == "pl" => pl.process[] { _key, number, title, description }, en.process[] { _key, number, title, description }), process[] { _key, number, title, description }),
   "deliverables": coalesce(select($lang == "pl" => pl.deliverables, en.deliverables), deliverables),
   "results": coalesce(select($lang == "pl" => pl.results, en.results), results),
   "galleryUrls": coalesce(galleryUrls, gallery[].asset->url),
@@ -135,7 +137,7 @@ export const caseStudyBySlugQuery = groq`*[_type == "caseStudy" && slug.current 
   "heroQuote": coalesce(select($lang == "pl" => pl.heroQuote, en.heroQuote), heroQuote),
   "challenge": coalesce(select($lang == "pl" => pl.challenge, en.challenge), challenge),
   "approach": coalesce(select($lang == "pl" => pl.approach, en.approach), approach),
-  "process": coalesce(select($lang == "pl" => pl.process[] { number, title, description }, en.process[] { number, title, description }), process[] { number, title, description }),
+  "process": coalesce(select($lang == "pl" => pl.process[] { _key, number, title, description }, en.process[] { _key, number, title, description }), process[] { _key, number, title, description }),
   "deliverables": coalesce(select($lang == "pl" => pl.deliverables, en.deliverables), deliverables),
   "results": coalesce(select($lang == "pl" => pl.results, en.results), results),
   "galleryUrls": coalesce(galleryUrls, gallery[].asset->url),

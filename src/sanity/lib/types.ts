@@ -1,4 +1,6 @@
 export type HomePage = {
+  _id?: string
+  _type?: 'homePage'
   heroTopText?: string
   heroWords?: string[]
   heroPrefix?: string
@@ -73,11 +75,13 @@ export type HomePage = {
 
 export type Challenge = {
   _id?: string
+  _type?: 'challenge'
   id?: string
   number: string
   title: string
   pathHero?: string
   pathContent?: Array<{
+    _key?: string
     heading?: string
     body?: string
   }>
@@ -87,6 +91,7 @@ export type Challenge = {
 
 export type InvestigationCard = {
   _id?: string
+  _type?: 'investigationCard'
   id?: string
   number: string
   category: string
@@ -107,6 +112,7 @@ export type PortfolioCase = {
   challenge: string
   approach: string
   process: Array<{
+    _key?: string
     number: string
     title: string
     description: string
@@ -119,14 +125,18 @@ export type PortfolioCase = {
 }
 
 export type AboutPage = {
+  _id?: string
+  _type?: 'aboutPage'
   title?: string
   subtitle?: string
   story?: Array<{
+    _key?: string
     heading?: string
     body?: string
   }>
   experienceTitle?: string
   experience?: Array<{
+    _key?: string
     role?: string
     company?: string
     years?: string

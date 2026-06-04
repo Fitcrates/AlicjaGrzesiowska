@@ -6,6 +6,12 @@ import { X } from "lucide-react";
 import { stegaClean } from "next-sanity";
 import { defaultLocale, type Locale } from "@/lib/i18n";
 import type { Challenge, HomePage, PortfolioCase } from "@/sanity/lib/types";
+import {
+  keyedPath,
+  localizedSanityPath,
+  sanityDataAttribute,
+  type SanityPath,
+} from "@/sanity/visual-editing";
 import styles from "./ChallengeSelection.module.css";
 
 import PortfolioGrid from "./PortfolioGrid";
@@ -121,6 +127,26 @@ export default function ChallengeSelection({
   const sectionLabel = data?.challengesSectionLabel || "Challenges";
   const singleChallengeLabel = data?.challengeLabel || "Challenge";
   const nextChallengeLabelText = data?.nextChallengeLabel || "Next Challenge";
+  const homeId = data?._id || "homePage";
+  const homeType = data?._type || "homePage";
+  const homeAttr = (path: SanityPath) =>
+    sanityDataAttribute({
+      id: homeId,
+      type: homeType,
+      path: localizedSanityPath(locale, path),
+    });
+  const challengeAttr = (challenge: Challenge, path: SanityPath) =>
+    sanityDataAttribute({
+      id: challenge._id,
+      type: challenge._type || "challenge",
+      path: localizedSanityPath(locale, path),
+    });
+  const challengeRootAttr = (challenge: Challenge, path: SanityPath) =>
+    sanityDataAttribute({
+      id: challenge._id,
+      type: challenge._type || "challenge",
+      path,
+    });
 
   const selectedChallenge = activeChallenges.find((c) => c._id === selectedId || c.id === selectedId);
   const nextChallenge = activeChallenges.find((c) => 
@@ -133,12 +159,18 @@ export default function ChallengeSelection({
     <section id="challenges" className={styles.section}>
       <div className={styles.sectionHeader}>
         <span className={styles.sectionNumber}>01</span>
-        <span className={styles.sectionLabel}>{sectionLabel}</span>
+        <span className={styles.sectionLabel} data-sanity={homeAttr("challengesSectionLabel")}>
+          {sectionLabel}
+        </span>
       </div>
 
       <div className={styles.introContainer}>
-        <p className={styles.introText}>{introText}</p>
-        <h2 className={styles.introHeading}>{introHeading}</h2>
+        <p className={styles.introText} data-sanity={homeAttr("challengeIntroText")}>
+          {introText}
+        </p>
+        <h2 className={styles.introHeading} data-sanity={homeAttr("challengeIntroHeading")}>
+          {introHeading}
+        </h2>
       </div>
 
       <div className={styles.grid}>
@@ -155,8 +187,12 @@ export default function ChallengeSelection({
             viewport={{ once: true }}
             transition={{ delay: index * 0.1, duration: 0.5 }}
           >
-            <span className={styles.columnNumber}>{challenge.number}</span>
-            <p className={styles.columnText}>{challenge.title}</p>
+            <span className={styles.columnNumber} data-sanity={challengeRootAttr(challenge, "number")}>
+              {challenge.number}
+            </span>
+            <p className={styles.columnText} data-sanity={challengeAttr(challenge, "title")}>
+              {challenge.title}
+            </p>
           </motion.div>
           )
         })}
@@ -183,16 +219,40 @@ export default function ChallengeSelection({
             <div className={styles.scrollContainer}>
               <div className={styles.expandedInner}>
                 <header className={styles.pathHeader}>
-                  <span className={styles.pathLabel}>{singleChallengeLabel} {selectedChallenge.number}</span>
-                  <h2 className={styles.pathTitle}>{selectedChallenge.title}</h2>
-                  <p className={styles.pathHero}>{selectedChallenge.pathHero}</p>
+                  <span className={styles.pathLabel} data-sanity={homeAttr("challengeLabel")}>
+                    {singleChallengeLabel} {selectedChallenge.number}
+                  </span>
+                  <h2 className={styles.pathTitle} data-sanity={challengeAttr(selectedChallenge, "title")}>
+                    {selectedChallenge.title}
+                  </h2>
+                  <p className={styles.pathHero} data-sanity={challengeAttr(selectedChallenge, "pathHero")}>
+                    {selectedChallenge.pathHero}
+                  </p>
                 </header>
 
                 <div className={styles.pathContent}>
                   {selectedChallenge.pathContent?.map((section, idx) => (
                     <div key={idx} className={styles.pathSection}>
-                      <h3 className={styles.pathSectionHeading}>{section.heading}</h3>
-                      <p className={styles.pathSectionBody}>{section.body}</p>
+                      <h3
+                        className={styles.pathSectionHeading}
+                        data-sanity={challengeAttr(selectedChallenge, [
+                          "pathContent",
+                          ...keyedPath(section._key, idx),
+                          "heading",
+                        ])}
+                      >
+                        {section.heading}
+                      </h3>
+                      <p
+                        className={styles.pathSectionBody}
+                        data-sanity={challengeAttr(selectedChallenge, [
+                          "pathContent",
+                          ...keyedPath(section._key, idx),
+                          "body",
+                        ])}
+                      >
+                        {section.body}
+                      </p>
                     </div>
                   ))}
                 </div>
@@ -207,8 +267,12 @@ export default function ChallengeSelection({
                     if (scrollContainer) scrollContainer.scrollTo({ top: 0, behavior: 'smooth' });
                     setTimeout(() => setSelectedId(nextChallenge._id || nextChallenge.id || null), 300);
                   }}>
-                    <div className={styles.nextPrompt}>{nextChallengeLabelText}</div>
-                    <h3 className={styles.nextTitle}>{nextChallenge.title} →</h3>
+                    <div className={styles.nextPrompt} data-sanity={homeAttr("nextChallengeLabel")}>
+                      {nextChallengeLabelText}
+                    </div>
+                    <h3 className={styles.nextTitle} data-sanity={challengeAttr(nextChallenge, "title")}>
+                      {nextChallenge.title} →
+                    </h3>
                   </footer>
                 )}
               </div>

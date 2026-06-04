@@ -3,7 +3,13 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, RotateCcw } from "lucide-react";
+import { defaultLocale, type Locale } from "@/lib/i18n";
 import type { HomePage } from "@/sanity/lib/types";
+import {
+  localizedSanityPath,
+  sanityDataAttribute,
+  type SanityPath,
+} from "@/sanity/visual-editing";
 import styles from "./ScatteredKnowledge.module.css";
 
 type NodeData = {
@@ -49,7 +55,13 @@ function getNodePos(angle: number, radius: number, cx: number, cy: number) {
   return { x: cx + radius * Math.cos(rad), y: cy + radius * Math.sin(rad) };
 }
 
-export default function ScatteredKnowledge({ data }: { data?: HomePage | null }) {
+export default function ScatteredKnowledge({
+  data,
+  locale = defaultLocale,
+}: {
+  data?: HomePage | null;
+  locale?: Locale;
+}) {
   const [fixedNodes, setFixedNodes] = useState<string[]>([]);
   const [activeNode, setActiveNode] = useState<NodeData | null>(null);
 
@@ -75,6 +87,14 @@ export default function ScatteredKnowledge({ data }: { data?: HomePage | null })
   const hubFixedLine1 = data?.hubFixedLine1 || "UNIFIED";
   const hubFixedLine2 = data?.hubFixedLine2 || "ECOSYSTEM";
   const modalQuoteText = data?.modalQuote || "Clarity is not the absence of information, but its arrangement.";
+  const homeId = data?._id || "homePage";
+  const homeType = data?._type || "homePage";
+  const homeAttr = (path: SanityPath) =>
+    sanityDataAttribute({
+      id: homeId,
+      type: homeType,
+      path: localizedSanityPath(locale, path),
+    });
 
   const nodes = getNodes(data);
   const isFixed = (nodeId: string) => nodeId === "hub" || fixedNodes.includes(nodeId);
@@ -112,7 +132,9 @@ export default function ScatteredKnowledge({ data }: { data?: HomePage | null })
     <section id="knowledge" className={styles.section}>
       <div className={styles.sectionHeader}>
         <span className={styles.sectionNumber}>02</span>
-        <span className={styles.sectionLabel}>{sectionLabel}</span>
+        <span className={styles.sectionLabel} data-sanity={homeAttr("knowledgeSectionLabel")}>
+          {sectionLabel}
+        </span>
       </div>
 
       <div className={styles.content}>
@@ -257,6 +279,7 @@ export default function ScatteredKnowledge({ data }: { data?: HomePage | null })
                         dominantBaseline="central"
                         className={styles.hubText}
                         fill="var(--color-primary)"
+                        data-sanity={homeAttr("hubUnfixedLine1")}
                       >
                         {hubUnfixedLine1}
                       </text>
@@ -267,6 +290,7 @@ export default function ScatteredKnowledge({ data }: { data?: HomePage | null })
                         dominantBaseline="central"
                         className={styles.hubText}
                         fill="var(--color-primary)"
+                        data-sanity={homeAttr("hubUnfixedLine2")}
                       >
                         {hubUnfixedLine2}
                       </text>
@@ -286,6 +310,7 @@ export default function ScatteredKnowledge({ data }: { data?: HomePage | null })
                         dominantBaseline="central"
                         className={styles.hubText}
                         fill="var(--background)"
+                        data-sanity={homeAttr("hubFixedLine1")}
                       >
                         {hubFixedLine1}
                       </text>
@@ -296,6 +321,7 @@ export default function ScatteredKnowledge({ data }: { data?: HomePage | null })
                         dominantBaseline="central"
                         className={styles.hubText}
                         fill="var(--background)"
+                        data-sanity={homeAttr("hubFixedLine2")}
                       >
                         {hubFixedLine2}
                       </text>
@@ -334,6 +360,7 @@ export default function ScatteredKnowledge({ data }: { data?: HomePage | null })
                       dominantBaseline="central"
                       fill={fixed ? "white" : "var(--color-charcoal)"}
                       className={styles.nodeLabel}
+                      data-sanity={homeAttr(`${node.id}Label`)}
                     >
                       {node.label}
                     </text>
@@ -376,10 +403,10 @@ export default function ScatteredKnowledge({ data }: { data?: HomePage | null })
                   exit={{ opacity: 0, y: -15, filter: "blur(8px)" }}
                   transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
                 >
-                  <h2 className={styles.legendTitle}>
+                  <h2 className={styles.legendTitle} data-sanity={homeAttr("knowledgeUnfixedTitle")}>
                     {unfixedTitle}
                   </h2>
-                  <p className={styles.legendDescription}>
+                  <p className={styles.legendDescription} data-sanity={homeAttr("knowledgeUnfixedDesc")}>
                     {unfixedDesc}
                   </p>
                 </motion.div>
@@ -392,10 +419,14 @@ export default function ScatteredKnowledge({ data }: { data?: HomePage | null })
                   exit={{ opacity: 0, y: -15, filter: "blur(8px)" }}
                   transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1], delay: 0.1 }}
                 >
-                  <h2 className={styles.legendTitle} style={{ color: "var(--color-accent)" }}>
+                  <h2
+                    className={styles.legendTitle}
+                    data-sanity={homeAttr("knowledgeFixedTitle")}
+                    style={{ color: "var(--color-accent)" }}
+                  >
                     {fixedTitle}
                   </h2>
-                  <p className={styles.legendDescription}>
+                  <p className={styles.legendDescription} data-sanity={homeAttr("knowledgeFixedDesc")}>
                     {fixedDesc}
                   </p>
                 </motion.div>
@@ -406,15 +437,21 @@ export default function ScatteredKnowledge({ data }: { data?: HomePage | null })
           <div className={styles.legendItems}>
             <div className={styles.legendItem}>
               <div className={`${styles.legendLine} ${styles.legendLineSolid}`}></div>
-              <span className={styles.legendText}>{healthyLabel}</span>
+              <span className={styles.legendText} data-sanity={homeAttr("healthyEcosystemLabel")}>
+                {healthyLabel}
+              </span>
             </div>
             <div className={styles.legendItem}>
               <div className={`${styles.legendLine} ${styles.legendLineDashed}`}></div>
-              <span className={styles.legendText}>{brokenLabel}</span>
+              <span className={styles.legendText} data-sanity={homeAttr("brokenConnectionLabel")}>
+                {brokenLabel}
+              </span>
             </div>
             <div className={styles.legendItem}>
               <div className={`${styles.legendLine} ${styles.legendLineDotted}`}></div>
-              <span className={styles.legendText}>{duplicateLabel}</span>
+              <span className={styles.legendText} data-sanity={homeAttr("duplicateSignalLabel")}>
+                {duplicateLabel}
+              </span>
             </div>
           </div>
 
@@ -451,7 +488,7 @@ export default function ScatteredKnowledge({ data }: { data?: HomePage | null })
                   transition={{ duration: 0.3 }}
                 >
                   <RotateCcw size={10} style={{ marginRight: 4 }} />
-                  {resetText}
+                  <span data-sanity={homeAttr("resetLabel")}>{resetText}</span>
                 </motion.button>
               )}
             </AnimatePresence>
@@ -485,33 +522,37 @@ export default function ScatteredKnowledge({ data }: { data?: HomePage | null })
               </button>
 
               <div className={styles.modalLeft}>
-                <p className={styles.modalQuote}>
+                <p className={styles.modalQuote} data-sanity={homeAttr("modalQuote")}>
                   {modalQuoteText}
                 </p>
               </div>
 
               <div className={styles.modalRight}>
-                <h3 className={styles.modalTitle}>{modalTitleText}</h3>
+                <h3 className={styles.modalTitle} data-sanity={homeAttr("modalTitle")}>
+                  {modalTitleText}
+                </h3>
                 <p className={styles.modalDescription}>
-                  {modalPrefix} {activeNode.label} {modalSuffix}
+                  <span data-sanity={homeAttr("modalDescriptionPrefix")}>{modalPrefix}</span>{" "}
+                  {activeNode.label}{" "}
+                  <span data-sanity={homeAttr("modalDescriptionSuffix")}>{modalSuffix}</span>
                 </p>
 
                 <div className={styles.modalDetail}>
                   <div className={styles.modalDetailText}>
-                    <h4>{currentStateTitleText}</h4>
-                    <p>{currentStateDescText}</p>
+                    <h4 data-sanity={homeAttr("currentStateTitle")}>{currentStateTitleText}</h4>
+                    <p data-sanity={homeAttr("currentStateDesc")}>{currentStateDescText}</p>
                   </div>
                 </div>
 
                 <div className={styles.modalDetail}>
                   <div className={styles.modalDetailText}>
-                    <h4>{targetStateTitleText}</h4>
-                    <p>{targetStateDescText}</p>
+                    <h4 data-sanity={homeAttr("targetStateTitle")}>{targetStateTitleText}</h4>
+                    <p data-sanity={homeAttr("targetStateDesc")}>{targetStateDescText}</p>
                   </div>
                 </div>
 
                 <button className={styles.modalApply} onClick={handleFixNode}>
-                  {applyFixText}
+                  <span data-sanity={homeAttr("applyFixLabel")}>{applyFixText}</span>
                 </button>
               </div>
             </motion.div>

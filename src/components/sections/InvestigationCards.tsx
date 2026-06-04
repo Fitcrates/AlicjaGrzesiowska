@@ -3,6 +3,12 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import type { InvestigationCard, HomePage } from "@/sanity/lib/types";
+import {
+  localizedSanityPath,
+  sanityDataAttribute,
+  type SanityPath,
+} from "@/sanity/visual-editing";
+import { defaultLocale, type Locale } from "@/lib/i18n";
 import styles from "./InvestigationCards.module.css";
 
 const defaultCards: InvestigationCard[] = [
@@ -40,13 +46,41 @@ const defaultCards: InvestigationCard[] = [
   },
 ];
 
-export default function InvestigationCards({ cards: sanityCards, data }: { cards?: InvestigationCard[]; data?: HomePage | null }) {
+export default function InvestigationCards({
+  cards: sanityCards,
+  data,
+  locale = defaultLocale,
+}: {
+  cards?: InvestigationCard[];
+  data?: HomePage | null;
+  locale?: Locale;
+}) {
   const [openCardId, setOpenCardId] = useState<string | null>(null);
 
   const activeCards = sanityCards && sanityCards.length > 0 ? sanityCards : defaultCards;
   const sectionLabel = data?.perspectivesSectionLabel || "Perspectives";
   const exploreHowLabel = data?.exploreHowLabel || "Explore how";
   const closeLabel = data?.closeLabel || "Close";
+  const homeId = data?._id || "homePage";
+  const homeType = data?._type || "homePage";
+  const homeAttr = (path: SanityPath) =>
+    sanityDataAttribute({
+      id: homeId,
+      type: homeType,
+      path: localizedSanityPath(locale, path),
+    });
+  const cardAttr = (card: InvestigationCard, path: SanityPath) =>
+    sanityDataAttribute({
+      id: card._id,
+      type: card._type || "investigationCard",
+      path: localizedSanityPath(locale, path),
+    });
+  const cardRootAttr = (card: InvestigationCard, path: SanityPath) =>
+    sanityDataAttribute({
+      id: card._id,
+      type: card._type || "investigationCard",
+      path,
+    });
 
   const toggleCard = (id: string) => {
     setOpenCardId((prev) => (prev === id ? null : id));
@@ -56,7 +90,9 @@ export default function InvestigationCards({ cards: sanityCards, data }: { cards
     <section id="perspectives" className={styles.section}>
       <div className={styles.sectionHeader}>
         <span className={styles.sectionNumber}>03</span>
-        <span className={styles.sectionLabel}>{sectionLabel}</span>
+        <span className={styles.sectionLabel} data-sanity={homeAttr("perspectivesSectionLabel")}>
+          {sectionLabel}
+        </span>
       </div>
 
       <div className={styles.grid}>
@@ -81,9 +117,12 @@ export default function InvestigationCards({ cards: sanityCards, data }: { cards
               >
                 {/* The static back page (Right Page) */}
                 <div className={styles.bookRightPage}>
-                  <p className={styles.cardBackContent}>{card.backContent}</p>
+                  <p className={styles.cardBackContent} data-sanity={cardAttr(card, "backContent")}>
+                    {card.backContent}
+                  </p>
                   <span 
                     className={styles.cardBackCta}
+                    data-sanity={homeAttr(isOpen ? "closeLabel" : "exploreHowLabel")}
                     onClick={(e) => {
                       if (isOpen) {
                         e.stopPropagation();
@@ -100,19 +139,31 @@ export default function InvestigationCards({ cards: sanityCards, data }: { cards
                   {/* Front face (Cover) */}
                   <div className={styles.coverFront}>
                     <div className={styles.cardHeader}>
-                      <span className={styles.cardNumber}>{card.number}</span>
-                      <span className={styles.cardCategory}>{card.category}</span>
+                      <span className={styles.cardNumber} data-sanity={cardRootAttr(card, "number")}>
+                        {card.number}
+                      </span>
+                      <span className={styles.cardCategory} data-sanity={cardAttr(card, "category")}>
+                        {card.category}
+                      </span>
                     </div>
-                    <h3 className={styles.cardTitle}>{card.title}</h3>
+                    <h3 className={styles.cardTitle} data-sanity={cardAttr(card, "title")}>
+                      {card.title}
+                    </h3>
                   </div>
 
                   {/* Back face (Inside Left Page) */}
                   <div className={styles.coverBack}>
                     <div className={styles.coverBackHeader}>
-                      <span className={styles.cardNumber}>{card.number}</span>
-                      <span className={styles.cardCategory}>{card.category}</span>
+                      <span className={styles.cardNumber} data-sanity={cardRootAttr(card, "number")}>
+                        {card.number}
+                      </span>
+                      <span className={styles.cardCategory} data-sanity={cardAttr(card, "category")}>
+                        {card.category}
+                      </span>
                     </div>
-                    <h3 className={styles.coverBackTitle}>{card.backTitle}</h3>
+                    <h3 className={styles.coverBackTitle} data-sanity={cardAttr(card, "backTitle")}>
+                      {card.backTitle}
+                    </h3>
                   </div>
                 </div>
               </motion.div>

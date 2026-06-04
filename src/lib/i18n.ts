@@ -12,5 +12,5 @@ export function getLocale(value?: string): Locale {
 }
 
 export function withLocalePath(locale: Locale, path: string) {
-  return locale === defaultLocale ? path : `/${locale}${path === "/" ? "" : path}`;
+  return `/${locale}${path === "/" ? "" : path}`;
 }

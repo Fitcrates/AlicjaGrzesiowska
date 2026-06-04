@@ -7,6 +7,12 @@ import { stegaClean } from "next-sanity";
 import type { CaseStudy } from "@/lib/cases";
 import { defaultLocale, type Locale, withLocalePath } from "@/lib/i18n";
 import type { HomePage } from "@/sanity/lib/types";
+import {
+  keyedPath,
+  localizedSanityPath,
+  sanityDataAttribute,
+  type SanityPath,
+} from "@/sanity/visual-editing";
 import styles from "./CaseStudyContent.module.css";
 
 export default function CaseStudyContent({
@@ -19,6 +25,26 @@ export default function CaseStudyContent({
   locale?: Locale;
 }) {
   const nextCaseSlug = study.nextCase ? stegaClean(study.nextCase) : null;
+  const homeId = data?._id || "homePage";
+  const homeType = data?._type || "homePage";
+  const homeAttr = (path: SanityPath) =>
+    sanityDataAttribute({
+      id: homeId,
+      type: homeType,
+      path: localizedSanityPath(locale, path),
+    });
+  const caseAttr = (path: SanityPath) =>
+    sanityDataAttribute({
+      id: study._id,
+      type: study._type || "caseStudy",
+      path: localizedSanityPath(locale, path),
+    });
+  const caseRootAttr = (path: SanityPath) =>
+    sanityDataAttribute({
+      id: study._id,
+      type: study._type || "caseStudy",
+      path,
+    });
 
   // Animation variants
   const fadeUp = {
@@ -42,7 +68,10 @@ export default function CaseStudyContent({
         {/* Navigation / Back */}
         <div className={styles.navTop}>
           <Link href={withLocalePath(locale, "/#portfolio")} className={styles.backLink}>
-            <span className={styles.arrow}>←</span> {data?.backToIndexLabel || "Back to index"}
+            <span className={styles.arrow}>←</span>{" "}
+            <span data-sanity={homeAttr("backToIndexLabel")}>
+              {data?.backToIndexLabel || "Back to index"}
+            </span>
           </Link>
         </div>
 
@@ -54,26 +83,38 @@ export default function CaseStudyContent({
             variants={staggerContainer}
             className={styles.heroContent}
           >
-            <motion.h1 variants={fadeUp} className={styles.title}>
+            <motion.h1 variants={fadeUp} className={styles.title} data-sanity={caseAttr("title")}>
               {study.title}
             </motion.h1>
             
             <motion.div variants={fadeUp} className={styles.metaContainer}>
               <div className={styles.metaItem}>
-                <span className={styles.metaLabel}>{data?.industryLabel || "Industry"}</span>
-                <span className={styles.metaValue}>{study.industry}</span>
+                <span className={styles.metaLabel} data-sanity={homeAttr("industryLabel")}>
+                  {data?.industryLabel || "Industry"}
+                </span>
+                <span className={styles.metaValue} data-sanity={caseAttr("industry")}>
+                  {study.industry}
+                </span>
               </div>
               <div className={styles.metaItem}>
-                <span className={styles.metaLabel}>{data?.yearLabel || "Year"}</span>
-                <span className={styles.metaValue}>{study.year}</span>
+                <span className={styles.metaLabel} data-sanity={homeAttr("yearLabel")}>
+                  {data?.yearLabel || "Year"}
+                </span>
+                <span className={styles.metaValue} data-sanity={caseRootAttr("year")}>
+                  {study.year}
+                </span>
               </div>
               <div className={styles.metaItem}>
-                <span className={styles.metaLabel}>{data?.focusLabel || "Focus"}</span>
-                <span className={styles.metaValue}>{study.focus}</span>
+                <span className={styles.metaLabel} data-sanity={homeAttr("focusLabel")}>
+                  {data?.focusLabel || "Focus"}
+                </span>
+                <span className={styles.metaValue} data-sanity={caseAttr("focus")}>
+                  {study.focus}
+                </span>
               </div>
             </motion.div>
 
-            <motion.p variants={fadeUp} className={styles.heroQuote}>
+            <motion.p variants={fadeUp} className={styles.heroQuote} data-sanity={caseAttr("heroQuote")}>
               &ldquo;{study.heroQuote}&rdquo;
             </motion.p>
           </motion.div>
@@ -88,8 +129,12 @@ export default function CaseStudyContent({
             variants={fadeUp}
             className={styles.col}
           >
-            <h2 className={styles.sectionTitle}>{data?.challengeSectionTitle || "The Challenge"}</h2>
-            <p className={styles.bodyText}>{study.challenge}</p>
+            <h2 className={styles.sectionTitle} data-sanity={homeAttr("challengeSectionTitle")}>
+              {data?.challengeSectionTitle || "The Challenge"}
+            </h2>
+            <p className={styles.bodyText} data-sanity={caseAttr("challenge")}>
+              {study.challenge}
+            </p>
           </motion.div>
           <motion.div
             initial="hidden"
@@ -98,8 +143,12 @@ export default function CaseStudyContent({
             variants={fadeUp}
             className={styles.col}
           >
-            <h2 className={styles.sectionTitle}>{data?.approachSectionTitle || "The Approach"}</h2>
-            <p className={styles.bodyText}>{study.approach}</p>
+            <h2 className={styles.sectionTitle} data-sanity={homeAttr("approachSectionTitle")}>
+              {data?.approachSectionTitle || "The Approach"}
+            </h2>
+            <p className={styles.bodyText} data-sanity={caseAttr("approach")}>
+              {study.approach}
+            </p>
           </motion.div>
         </section>
 
@@ -112,11 +161,13 @@ export default function CaseStudyContent({
             variants={fadeUp}
             className={styles.sectionHeader}
           >
-            <h2 className={styles.sectionTitle}>{data?.processSectionTitle || "The Process"}</h2>
+            <h2 className={styles.sectionTitle} data-sanity={homeAttr("processSectionTitle")}>
+              {data?.processSectionTitle || "The Process"}
+            </h2>
           </motion.div>
           
           <div className={styles.processGrid}>
-            {study.process.map((step: { number: string; title: string; description: string }, index: number) => (
+            {study.process.map((step: { _key?: string; number: string; title: string; description: string }, index: number) => (
               <motion.div
                 key={step.number}
                 className={styles.processStep}
@@ -126,10 +177,25 @@ export default function CaseStudyContent({
                 transition={{ duration: 0.6, delay: index * 0.1 }}
               >
                 <div className={styles.stepHeader}>
-                  <span className={styles.stepNumber}>{step.number}</span>
-                  <h3 className={styles.stepTitle}>{step.title}</h3>
+                  <span
+                    className={styles.stepNumber}
+                    data-sanity={caseAttr(["process", ...keyedPath(step._key, index), "number"])}
+                  >
+                    {step.number}
+                  </span>
+                  <h3
+                    className={styles.stepTitle}
+                    data-sanity={caseAttr(["process", ...keyedPath(step._key, index), "title"])}
+                  >
+                    {step.title}
+                  </h3>
                 </div>
-                <p className={styles.stepDescription}>{step.description}</p>
+                <p
+                  className={styles.stepDescription}
+                  data-sanity={caseAttr(["process", ...keyedPath(step._key, index), "description"])}
+                >
+                  {step.description}
+                </p>
               </motion.div>
             ))}
           </div>
@@ -145,7 +211,9 @@ export default function CaseStudyContent({
               variants={fadeUp}
               className={styles.sectionHeader}
             >
-              <h2 className={styles.sectionTitle}>{data?.gallerySectionTitle || "Gallery"}</h2>
+              <h2 className={styles.sectionTitle} data-sanity={homeAttr("gallerySectionTitle")}>
+                {data?.gallerySectionTitle || "Gallery"}
+              </h2>
             </motion.div>
 
             <div className={styles.galleryGrid}>
@@ -153,6 +221,7 @@ export default function CaseStudyContent({
                 <motion.div
                   key={index}
                   className={styles.galleryImageWrapper}
+                  data-sanity={caseRootAttr(["galleryUrls", index])}
                   initial={{ opacity: 0, scale: 0.95 }}
                   whileInView={{ opacity: 1, scale: 1 }}
                   viewport={{ once: true, margin: "-50px" }}
@@ -180,10 +249,14 @@ export default function CaseStudyContent({
             variants={fadeUp}
             className={styles.deliverablesCol}
           >
-            <h2 className={styles.sectionTitle}>{data?.deliverablesSectionTitle || "Deliverables"}</h2>
+            <h2 className={styles.sectionTitle} data-sanity={homeAttr("deliverablesSectionTitle")}>
+              {data?.deliverablesSectionTitle || "Deliverables"}
+            </h2>
             <ul className={styles.deliverablesList}>
               {study.deliverables.map((item: string, i: number) => (
-                <li key={i} className={styles.deliverableItem}>{item}</li>
+                <li key={i} className={styles.deliverableItem} data-sanity={caseAttr(["deliverables", i])}>
+                  {item}
+                </li>
               ))}
             </ul>
           </motion.div>
@@ -195,8 +268,12 @@ export default function CaseStudyContent({
             variants={fadeUp}
             className={styles.resultsCol}
           >
-            <h2 className={styles.sectionTitle}>{data?.impactSectionTitle || "The Impact"}</h2>
-            <p className={styles.resultsText}>{study.results}</p>
+            <h2 className={styles.sectionTitle} data-sanity={homeAttr("impactSectionTitle")}>
+              {data?.impactSectionTitle || "The Impact"}
+            </h2>
+            <p className={styles.resultsText} data-sanity={caseAttr("results")}>
+              {study.results}
+            </p>
           </motion.div>
         </section>
 
@@ -204,8 +281,12 @@ export default function CaseStudyContent({
         {nextCaseSlug && (
           <footer className={styles.nextCaseFooter}>
             <Link href={withLocalePath(locale, `/case/${nextCaseSlug}`)} className={styles.nextCaseLink}>
-              <span className={styles.nextLabel}>{data?.nextProjectLabel || "Next Project"}</span>
-              <span className={styles.nextTitle}>{data?.continueReadingLabel || "Continue reading →"}</span>
+              <span className={styles.nextLabel} data-sanity={homeAttr("nextProjectLabel")}>
+                {data?.nextProjectLabel || "Next Project"}
+              </span>
+              <span className={styles.nextTitle} data-sanity={homeAttr("continueReadingLabel")}>
+                {data?.continueReadingLabel || "Continue reading →"}
+              </span>
             </Link>
           </footer>
         )}
