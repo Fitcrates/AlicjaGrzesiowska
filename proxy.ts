@@ -8,10 +8,36 @@ const SANITY_PREVIEW_PERSPECTIVE_HEADER = "x-sanity-preview-perspective";
 const SANITY_PREVIEW_PERSPECTIVE_PARAM = "sanity-preview-perspective";
 const SANITY_PREVIEW_SECRET_PARAM = "sanity-preview-secret";
 
+function getRefererUrl(request: NextRequest) {
+  const referer = request.headers.get("referer");
+
+  if (!referer) return null;
+
+  try {
+    return new URL(referer);
+  } catch {
+    return null;
+  }
+}
+
+function isSanityReferer(request: NextRequest) {
+  const refererUrl = getRefererUrl(request);
+  const hostname = refererUrl?.hostname;
+
+  return (
+    hostname === "sanity.io" ||
+    Boolean(hostname?.endsWith(".sanity.io")) ||
+    Boolean(hostname?.endsWith(".sanity.studio"))
+  );
+}
+
 function getSanityPreviewPerspective(request: NextRequest) {
+  const refererUrl = getRefererUrl(request);
+
   return (
     request.nextUrl.searchParams.get(SANITY_PREVIEW_PERSPECTIVE_PARAM) ||
     request.cookies.get(SANITY_PREVIEW_PERSPECTIVE_PARAM)?.value ||
+    refererUrl?.searchParams.get(SANITY_PREVIEW_PERSPECTIVE_PARAM) ||
     null
   );
 }
@@ -19,7 +45,8 @@ function getSanityPreviewPerspective(request: NextRequest) {
 function isSanityPreviewRequest(request: NextRequest) {
   return (
     Boolean(getSanityPreviewPerspective(request)) ||
-    request.nextUrl.searchParams.has(SANITY_PREVIEW_SECRET_PARAM)
+    request.nextUrl.searchParams.has(SANITY_PREVIEW_SECRET_PARAM) ||
+    isSanityReferer(request)
   );
 }
 
