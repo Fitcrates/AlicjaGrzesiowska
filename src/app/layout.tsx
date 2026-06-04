@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import { Cormorant_Garamond, Inter, Space_Mono } from "next/font/google";
 import Navbar from "@/components/layout/Navbar";
 import { SanityLive } from "@/sanity/lib/live";
+import { isSanityPreviewRequest } from "@/sanity/preview";
 import { defaultLocale } from "@/lib/i18n";
 import { VisualEditing } from "next-sanity/visual-editing";
-import { draftMode } from "next/headers";
 import "./globals.css";
 
 const cormorant = Cormorant_Garamond({
@@ -35,15 +35,15 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const isDraftMode = (await draftMode()).isEnabled;
+  const isPreview = await isSanityPreviewRequest();
 
   return (
     <html lang={defaultLocale} className={`${cormorant.variable} ${inter.variable} ${spaceMono.variable}`}>
       <body>
         <Navbar />
         <main>{children}</main>
-        <SanityLive includeDrafts={isDraftMode} />
-        {isDraftMode && <VisualEditing />}
+        <SanityLive includeDrafts={isPreview} />
+        {isPreview && <VisualEditing />}
       </body>
     </html>
   );
