@@ -2,19 +2,27 @@ import 'server-only'
 
 import type { QueryParams } from 'next-sanity'
 import { PHASE_PRODUCTION_BUILD } from 'next/constants'
-import { cookies, draftMode } from 'next/headers'
+import { cookies, draftMode, headers } from 'next/headers'
 import {
   resolvePerspectiveFromCookies,
   type LivePerspective,
 } from 'next-sanity/live'
 import { client, sanityCacheTags } from './client'
 import { sanityLiveFetch } from './live'
+import {
+  SANITY_PREVIEW_HEADER,
+  SANITY_PREVIEW_PERSPECTIVE_HEADER,
+} from '../preview'
 
 const DEFAULT_PARAMS = {} as QueryParams
 const DEFAULT_TAGS = [sanityCacheTags.all]
 
 function resolveTags(tags: string[]) {
   return Array.from(new Set([...DEFAULT_TAGS, ...tags]))
+}
+
+function resolveHeaderPerspective(value: string | null): LivePerspective {
+  return value && value !== 'raw' ? (value as LivePerspective) : 'drafts'
 }
 
 async function resolveLiveFetchOptions(): Promise<{
@@ -25,14 +33,18 @@ async function resolveLiveFetchOptions(): Promise<{
     return { perspective: 'published', stega: false }
   }
 
-  const { isEnabled } = await draftMode()
+  const [{ isEnabled }, headerStore] = await Promise.all([draftMode(), headers()])
+  const headerPerspective = headerStore.get(SANITY_PREVIEW_PERSPECTIVE_HEADER)
+  const hasPreviewHeader = headerStore.get(SANITY_PREVIEW_HEADER) === '1'
 
-  if (!isEnabled) {
+  if (!isEnabled && !hasPreviewHeader && !headerPerspective) {
     return { perspective: 'published', stega: false }
   }
 
   const perspective =
-    (await resolvePerspectiveFromCookies({ cookies: await cookies() })) ??
+    headerPerspective
+      ? resolveHeaderPerspective(headerPerspective)
+      : (await resolvePerspectiveFromCookies({ cookies: await cookies() })) ??
     'drafts'
 
   return { perspective, stega: true }

@@ -3,6 +3,43 @@ import type { NextRequest } from "next/server";
 import { locales, defaultLocale } from "@/lib/i18n";
 
 const PUBLIC_FILE = /\.(.*)$/;
+const SANITY_PREVIEW_HEADER = "x-sanity-presentation-preview";
+const SANITY_PREVIEW_PERSPECTIVE_HEADER = "x-sanity-preview-perspective";
+const SANITY_PREVIEW_PERSPECTIVE_PARAM = "sanity-preview-perspective";
+const SANITY_PREVIEW_SECRET_PARAM = "sanity-preview-secret";
+
+function getSanityPreviewPerspective(request: NextRequest) {
+  return (
+    request.nextUrl.searchParams.get(SANITY_PREVIEW_PERSPECTIVE_PARAM) ||
+    request.cookies.get(SANITY_PREVIEW_PERSPECTIVE_PARAM)?.value ||
+    null
+  );
+}
+
+function isSanityPreviewRequest(request: NextRequest) {
+  return (
+    Boolean(getSanityPreviewPerspective(request)) ||
+    request.nextUrl.searchParams.has(SANITY_PREVIEW_SECRET_PARAM)
+  );
+}
+
+function withSanityPreviewHeaders(request: NextRequest) {
+  if (!isSanityPreviewRequest(request)) {
+    return NextResponse.next();
+  }
+
+  const requestHeaders = new Headers(request.headers);
+  const perspective = getSanityPreviewPerspective(request) || "drafts";
+
+  requestHeaders.set(SANITY_PREVIEW_HEADER, "1");
+  requestHeaders.set(SANITY_PREVIEW_PERSPECTIVE_HEADER, perspective);
+
+  return NextResponse.next({
+    request: {
+      headers: requestHeaders,
+    },
+  });
+}
 
 export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
@@ -22,7 +59,7 @@ export function proxy(request: NextRequest) {
   );
 
   if (pathnameHasLocale) {
-    return NextResponse.next();
+    return withSanityPreviewHeaders(request);
   }
 
   // Redirect to default locale
