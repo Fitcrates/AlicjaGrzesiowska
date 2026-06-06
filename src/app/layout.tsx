@@ -4,7 +4,7 @@ import Navbar from "@/components/layout/Navbar";
 import { SanityLive } from "@/sanity/lib/live";
 import { isSanityPreviewRequest } from "@/sanity/preview";
 import { defaultLocale } from "@/lib/i18n";
-import { VisualEditing } from "next-sanity/visual-editing";
+import VisualEditingWrapper from "@/components/VisualEditingWrapper";
 import "./globals.css";
 
 const cormorant = Cormorant_Garamond({
@@ -43,7 +43,7 @@ export default async function RootLayout({
         <Navbar />
         <main>{children}</main>
         <SanityLive includeDrafts={isPreview} />
-        {isPreview && <VisualEditing />}
+        <VisualEditingWrapper />
       </body>
     </html>
   );
