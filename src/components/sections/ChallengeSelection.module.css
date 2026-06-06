@@ -1,5 +1,6 @@
 .section {
   border-top: var(--border-thin);
+  overflow-x: hidden;
 }
 
 .sectionHeader {
@@ -40,6 +41,14 @@
 
 @media (min-width: 768px) {
   .grid {
+    grid-template-columns: repeat(2, 1fr);
+    padding: var(--spacing-lg);
+    gap: var(--spacing-md);
+  }
+}
+
+@media (min-width: 1440px) {
+  .grid {
     grid-template-columns: repeat(4, 1fr);
     padding: var(--spacing-xl);
     gap: var(--spacing-md);
@@ -47,12 +56,11 @@
 }
 
 .column {
-  padding: var(--spacing-xl) var(--spacing-lg);
+  padding: var(--spacing-lg) var(--spacing-lg);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  min-height: 400px;
-  aspect-ratio: 4/5;
+  min-height: 280px;
   cursor: pointer;
   transition: all 0.4s ease;
   position: relative;
@@ -62,14 +70,16 @@
 
 @media (min-width: 768px) {
   .column {
-    min-height: 500px;
-    aspect-ratio: auto;
+    min-height: 320px;
+    padding: var(--spacing-lg);
   }
 }
 
-@media (min-width: 1024px) {
+@media (min-width: 1440px) {
   .column {
+    min-height: 400px;
     aspect-ratio: 2/3;
+    padding: var(--spacing-xl) var(--spacing-lg);
   }
 }
 
@@ -163,7 +173,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 100%;
+  width: calc(100% - 2rem);
   max-width: 1000px;
   background-color: var(--surface);
   box-shadow: var(--shadow-lg);

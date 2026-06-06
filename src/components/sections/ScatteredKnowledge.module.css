@@ -1,5 +1,6 @@
 .section {
   border-top: var(--border-thin);
+  overflow-x: hidden;
   --color-charcoal: #2a2a2a;
   --color-sandy: #d8c9b3;
 }
@@ -259,16 +260,23 @@
   justify-content: center;
   background: rgba(0, 0, 0, 0.4);
   backdrop-filter: blur(4px);
-  padding: var(--spacing-lg);
+  padding: var(--spacing-md);
+}
+
+@media (min-width: 768px) {
+  .modalOverlay {
+    padding: var(--spacing-lg);
+  }
 }
 
 .modal {
   background: var(--background);
   max-width: 900px;
+  max-height: calc(100vh - 2rem);
   width: 100%;
   display: grid;
   grid-template-columns: 1fr;
-  overflow: hidden;
+  overflow-y: auto;
   position: relative;
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
   border: var(--border-thin);
@@ -276,18 +284,27 @@
 
 @media (min-width: 768px) {
   .modal {
+    max-height: calc(100vh - 5rem);
     grid-template-columns: 1fr 1fr;
   }
 }
 
 .modalLeft {
-  padding: var(--spacing-xl);
+  padding: var(--spacing-lg);
   display: flex;
   align-items: center;
-  border-right: var(--border-thin);
-  border-bottom: 4px solid var(--color-accent);
+  border-right: none;
+  border-bottom: var(--border-thin);
   border-top: 4px solid var(--color-accent);
   background: white;
+}
+
+@media (min-width: 768px) {
+  .modalLeft {
+    padding: var(--spacing-xl);
+    border-right: var(--border-thin);
+    border-bottom: 4px solid var(--color-accent);
+  }
 }
 
 .modalQuote {
@@ -299,11 +316,17 @@
 }
 
 .modalRight {
-  padding: var(--spacing-xl);
+  padding: var(--spacing-lg);
   display: flex;
   flex-direction: column;
   justify-content: center;
   background: var(--background);
+}
+
+@media (min-width: 768px) {
+  .modalRight {
+    padding: var(--spacing-xl);
+  }
 }
 
 .modalTitle {

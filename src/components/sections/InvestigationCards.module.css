@@ -1,5 +1,6 @@
 .section {
   border-top: var(--border-thin);
+  overflow-x: hidden;
 }
 
 .sectionHeader {
@@ -29,20 +30,29 @@
   display: grid;
   grid-template-columns: 1fr;
   gap: var(--spacing-md);
-  padding: var(--spacing-xl);
+  padding: var(--spacing-lg);
 }
 
 @media (min-width: 768px) {
   .grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--spacing-lg);
+    padding: var(--spacing-lg);
+  }
+}
+
+@media (min-width: 1440px) {
+  .grid {
     grid-template-columns: repeat(4, 1fr);
     gap: var(--spacing-lg);
+    padding: var(--spacing-xl);
   }
 }
 
 /* grid placeholder */
 .placeholder {
   position: relative;
-  aspect-ratio: 3/4;
+  aspect-ratio: 5/4;
   width: 100%;
 }
 
@@ -51,9 +61,18 @@
   perspective: 2000px;
   cursor: pointer;
   width: 100%;
-  aspect-ratio: 3/4;
+  aspect-ratio: 5/4;
   position: relative;
   z-index: 1;
+}
+
+@media (min-width: 1440px) {
+  .placeholder {
+    aspect-ratio: 3/4;
+  }
+  .cardWrapper {
+    aspect-ratio: 3/4;
+  }
 }
 
 /* Dim backdrop when any card is open */
@@ -65,13 +84,12 @@
   z-index: 100;
 }
 
-/* Centered modal active card using Framer Motion layout */
 .isOpen.cardWrapper {
   position: fixed;
   top: 50%;
   left: 50%;
-  /* Match the exact grid column width: (viewport - 2*padding - 3*gaps) / 4 */
-  width: calc((100vw - 14rem) / 4);
+  width: 20%;
+  max-width: 320px;
   aspect-ratio: 3/4;
   height: auto;
   /* Hinge (left edge) at center, vertically centered */
@@ -81,10 +99,17 @@
   cursor: default;
 }
 
+@media (max-width: 1199px) {
+  .isOpen.cardWrapper {
+    width: 35%;
+    max-width: 260px;
+  }
+}
+
 @media (max-width: 767px) {
   .isOpen.cardWrapper {
-    width: 45vw; /* ensures 2 * 45vw = 90vw fits on mobile */
-    transform: translate(0, -50%) !important;
+    width: 45%; 
+    max-width: 200px;
   }
 }
 
