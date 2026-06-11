@@ -40,6 +40,9 @@ export default function Navbar() {
         <span className={styles.brand}>Alicja Grzesiowska</span>
         <ul className={styles.navLinks}>
           <li>
+            <Link href={`/${lang}`} className={styles.navLink}>Start</Link>
+          </li>
+          <li>
             <Link href={`/${lang}#challenges`} className={styles.navLink}>Work</Link>
           </li>
           <li>
@@ -50,6 +53,9 @@ export default function Navbar() {
           </li>
           <li>
             <Link href={`/${lang}#perspectives`} className={styles.navLink}>Perspectives</Link>
+          </li>
+          <li>
+            <Link href={`/${lang}#portfolio`} className={styles.navLink}>Portfolio</Link>
           </li>
         </ul>
         <Link href={`/${lang}#contact`} className={styles.navLink}>Contact</Link>
@@ -73,6 +79,11 @@ export default function Navbar() {
             >
               <ul className={styles.mobileNavLinks}>
                 <li>
+                  <Link href={`/${lang}`} className={styles.mobileNavLink} onClick={toggleMenu}>
+                    Start
+                  </Link>
+                </li>
+                <li>
                   <Link href={`/${lang}#challenges`} className={styles.mobileNavLink} onClick={toggleMenu}>
                     Work
                   </Link>
@@ -90,6 +101,11 @@ export default function Navbar() {
                 <li>
                   <Link href={`/${lang}#perspectives`} className={styles.mobileNavLink} onClick={toggleMenu}>
                     Perspectives
+                  </Link>
+                </li>
+                <li>
+                  <Link href={`/${lang}#portfolio`} className={styles.mobileNavLink} onClick={toggleMenu}>
+                    Portfolio
                   </Link>
                 </li>
                 <li>

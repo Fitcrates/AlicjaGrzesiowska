@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, RotateCcw } from "lucide-react";
 import { defaultLocale, type Locale } from "@/lib/i18n";
@@ -128,6 +128,17 @@ export default function ScatteredKnowledge({
   const hubRadius = 70; // 140px diameter
   const nodeRadius = 55; // 110px diameter
 
+  // Use tighter viewBox on mobile to zoom into graph content
+  const [isMobile, setIsMobile] = useState(false);
+  useEffect(() => {
+    const mql = window.matchMedia("(max-width: 767px)");
+    setIsMobile(mql.matches);
+    const handler = (e: MediaQueryListEvent) => setIsMobile(e.matches);
+    mql.addEventListener("change", handler);
+    return () => mql.removeEventListener("change", handler);
+  }, []);
+  const svgViewBox = isMobile ? "220 50 760 700" : "0 0 1200 800";
+
   return (
     <section id="knowledge" className={styles.section}>
       <div className={styles.sectionHeader}>
@@ -141,7 +152,7 @@ export default function ScatteredKnowledge({
         {/* Graph Side */}
         <div className={styles.graphSide}>
           <div className={styles.graphWrapper}>
-            <svg className={styles.svgCanvas} viewBox="0 0 1200 800">
+            <svg className={styles.svgCanvas} viewBox={svgViewBox}>
               {/* Faint dashed orbital ring path */}
               <circle
                 cx={cx}
@@ -177,7 +188,7 @@ export default function ScatteredKnowledge({
                       x2={toPos.x}
                       y2={toPos.y}
                       stroke="var(--color-accent)"
-                      strokeWidth="1.5"
+                      strokeWidth="2"
                       initial={{ pathLength: 0 }}
                       animate={{ pathLength: 1 }}
                       transition={{ duration: 1 }}
@@ -253,11 +264,11 @@ export default function ScatteredKnowledge({
                   cx={cx}
                   cy={cy}
                   r={hubRadius}
-                  fill={allFixed ? "var(--color-accent)" : "var(--background)"}
+                  fill={allFixed ? "var(--color-accent)" : "var(--surface)"}
                   stroke={allFixed ? "var(--color-accent)" : "var(--color-charcoal)"}
                   strokeWidth="1"
                   animate={{ 
-                    fill: allFixed ? "var(--color-accent)" : "var(--background)",
+                    fill: allFixed ? "var(--color-accent)" : "var(--surface)",
                     stroke: allFixed ? "var(--color-accent)" : "var(--color-charcoal)" 
                   }}
                   transition={{ duration: 1 }}
@@ -347,7 +358,7 @@ export default function ScatteredKnowledge({
                       cx={pos.x}
                       cy={pos.y}
                       r={nodeRadius}
-                      fill={fixed ? "var(--color-accent)" : "var(--background)"}
+                      fill={fixed ? "var(--color-accent)" : "var(--surface)"}
                       stroke={fixed ? "var(--color-accent)" : "var(--color-charcoal)"}
                       strokeWidth={fixed ? "2" : "1"}
                       className={styles.nodeCircle}

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Cormorant_Garamond, Inter, Space_Mono } from "next/font/google";
+import { Fraunces, Inter, Space_Mono } from "next/font/google";
 import Navbar from "@/components/layout/Navbar";
 import { SanityLive } from "@/sanity/lib/live";
 import { isSanityPreviewRequest } from "@/sanity/preview";
@@ -7,11 +7,11 @@ import { defaultLocale } from "@/lib/i18n";
 import VisualEditingWrapper from "@/components/VisualEditingWrapper";
 import "./globals.css";
 
-const cormorant = Cormorant_Garamond({
+const fraunces = Fraunces({
   subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700"],
   variable: "--font-heading",
   style: ["normal", "italic"],
+  axes: ["opsz", "SOFT", "WONK"],
 });
 
 const inter = Inter({
@@ -38,7 +38,7 @@ export default async function RootLayout({
   const isPreview = await isSanityPreviewRequest();
 
   return (
-    <html lang={defaultLocale} className={`${cormorant.variable} ${inter.variable} ${spaceMono.variable}`}>
+    <html lang={defaultLocale} className={`${fraunces.variable} ${inter.variable} ${spaceMono.variable}`}>
       <body>
         <Navbar />
         <main>{children}</main>

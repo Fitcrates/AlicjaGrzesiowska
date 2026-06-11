@@ -1,16 +1,24 @@
 .section {
   border-top: var(--border-thin);
   overflow-x: hidden;
-  --color-charcoal: #2a2a2a;
-  --color-sandy: #d8c9b3;
+  /* Section-scoped semantics: broken = amber warning, muted = sandy */
+  --color-charcoal: #38304A;
+  --color-sandy: #DFD3BC;
+  --color-terracotta: var(--color-amber-deep);
 }
 
 .sectionHeader {
   display: flex;
   align-items: center;
   gap: var(--spacing-md);
-  padding: var(--spacing-md) var(--spacing-xl);
+  padding: calc(var(--spacing-md) / 1.5) var(--spacing-md);
   border-bottom: var(--border-thin);
+}
+
+@media (min-width: 1024px) {
+  .sectionHeader {
+    padding: calc(var(--spacing-md) / 1.5) var(--spacing-md);
+  }
 }
 
 .sectionNumber {
@@ -45,29 +53,41 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: var(--spacing-lg);
-  min-height: 400px;
+  padding: 0;
+  min-height: 90vw;
   border-bottom: var(--border-thin);
   background: var(--background);
   overflow: hidden;
+}
+
+@media (min-width: 768px) {
+  .graphSide {
+    padding: calc(var(--spacing-lg) / 1.5) var(--spacing-md);
+    min-height: 500px;
+  }
 }
 
 @media (min-width: 1024px) {
   .graphSide {
     border-bottom: none;
     border-right: var(--border-thin);
-    padding: var(--spacing-xl);
+    padding: calc(var(--spacing-xl) / 1.5) var(--spacing-md);
     min-height: 750px;
-    /* Taller section */
   }
 }
 
 .graphWrapper {
   position: relative;
   width: 100%;
-  max-width: 900px;
-  /* Allow graph to be much larger on desktop */
-  aspect-ratio: 3 / 2;
+  /* Square on mobile so graph fills maximum area */
+  aspect-ratio: 1 / 1;
+}
+
+@media (min-width: 768px) {
+  .graphWrapper {
+    aspect-ratio: 3 / 2;
+    max-width: 900px;
+  }
 }
 
 .svgCanvas {
@@ -89,7 +109,7 @@
   font-family: var(--font-mono);
   font-size: 11px;
   letter-spacing: 0.25em;
-  font-weight: 500;
+  font-weight: 700;
 }
 
 /* Orbital Nodes */
@@ -101,17 +121,25 @@
 }
 
 .orbitalNode:hover {
-  transform: scale(1.05);
+  transform: scale(1.06);
 }
 
 .nodeCircle {
   transition: fill 0.4s ease, stroke 0.4s ease, stroke-width 0.4s ease;
+  filter: drop-shadow(0 6px 14px rgba(75, 46, 145, 0.10));
+}
+
+.orbitalNode:hover .nodeCircle {
+  stroke: var(--color-violet);
+  stroke-width: 2;
+  filter: drop-shadow(0 10px 20px rgba(75, 46, 145, 0.18));
 }
 
 .nodeLabel {
   font-family: var(--font-heading);
-  font-size: 24px;
+  font-size: 22px;
   pointer-events: none;
+  transition: fill 0.4s ease;
 }
 
 /* Hint CTA below graph */
@@ -129,10 +157,16 @@
 }
 
 .legendSide {
-  padding: var(--spacing-xl);
+  padding: calc(var(--spacing-lg) / 1.5) var(--spacing-md);
   display: flex;
   flex-direction: column;
   justify-content: center;
+}
+
+@media (min-width: 1024px) {
+  .legendSide {
+    padding: calc(var(--spacing-xl) / 1.5) var(--spacing-md);
+  }
 }
 
 .legendTextWrapper {
@@ -155,10 +189,9 @@
 }
 
 .legendDescription {
-  font-family: var(--font-heading);
-  font-size: 1.125rem;
-  font-style: italic;
-  line-height: 1.6;
+  font-family: var(--font-body);
+  font-size: 1.05rem;
+  line-height: 1.7;
   color: var(--color-secondary);
   margin-bottom: var(--spacing-xl);
 }
@@ -182,14 +215,14 @@
 }
 
 .legendLineSolid {
-  background: var(--color-accent);
+  background: var(--color-violet);
   height: 2px;
 }
 
 .legendLineDashed {
   background: repeating-linear-gradient(to right,
-      var(--color-terracotta),
-      var(--color-terracotta) 4px,
+      var(--color-amber-deep),
+      var(--color-amber-deep) 4px,
       transparent 4px,
       transparent 8px);
   height: 1px;
@@ -229,7 +262,7 @@
 }
 
 .statusComplete {
-  color: var(--color-accent);
+  color: var(--color-violet);
 }
 
 .resetBtn {
@@ -246,8 +279,8 @@
 }
 
 .resetBtn:hover {
-  border-color: var(--color-primary);
-  color: var(--color-primary);
+  border-color: var(--color-violet);
+  color: var(--color-violet);
 }
 
 /* Modal */
@@ -258,7 +291,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(0, 0, 0, 0.4);
+  background: rgba(34, 28, 51, 0.45);
   backdrop-filter: blur(4px);
   padding: var(--spacing-md);
 }
@@ -270,7 +303,7 @@
 }
 
 .modal {
-  background: var(--background);
+  background: var(--surface);
   max-width: 900px;
   max-height: calc(100vh - 2rem);
   width: 100%;
@@ -295,15 +328,15 @@
   align-items: center;
   border-right: none;
   border-bottom: var(--border-thin);
-  border-top: 4px solid var(--color-accent);
-  background: white;
+  border-top: 4px solid var(--highlight-yellow);
+  background: var(--color-violet-soft);
 }
 
 @media (min-width: 768px) {
   .modalLeft {
     padding: var(--spacing-xl);
     border-right: var(--border-thin);
-    border-bottom: 4px solid var(--color-accent);
+    border-bottom: 4px solid var(--highlight-yellow);
   }
 }
 
@@ -312,7 +345,7 @@
   font-style: italic;
   font-size: clamp(2rem, 3vw, 3rem);
   line-height: 1.15;
-  color: var(--color-terracotta);
+  color: var(--color-violet-deep);
 }
 
 .modalRight {
@@ -320,7 +353,7 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  background: var(--background);
+  background: var(--surface);
 }
 
 @media (min-width: 768px) {
@@ -339,9 +372,9 @@
 }
 
 .modalDescription {
-  font-family: var(--font-heading);
-  font-size: 1.1rem;
-  line-height: 1.6;
+  font-family: var(--font-body);
+  font-size: 1.05rem;
+  line-height: 1.7;
   color: var(--color-secondary);
   margin-bottom: var(--spacing-xl);
 }
@@ -361,18 +394,22 @@
   margin-bottom: 0.5rem;
 }
 
+.modalDetailText h4 {
+  color: var(--color-violet);
+}
+
 .modalDetailText p {
-  font-family: var(--font-heading);
+  font-family: var(--font-body);
   font-size: 0.95rem;
-  line-height: 1.5;
+  line-height: 1.6;
   color: var(--color-secondary);
 }
 
 .modalApply {
   margin-top: var(--spacing-lg);
   padding: var(--spacing-md) 0;
-  background: var(--color-accent);
-  color: white;
+  background: var(--color-violet);
+  color: #FFFCF5;
   font-family: var(--font-mono);
   font-size: 0.75rem;
   text-transform: uppercase;
@@ -385,7 +422,7 @@
 }
 
 .modalApply:hover {
-  background-color: #305e2f;
+  background-color: var(--color-violet-deep);
 }
 
 .modalClose {

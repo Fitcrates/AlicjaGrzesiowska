@@ -158,11 +158,43 @@ export default async function RootLayout({ children }) {
 }
 ```
 
-Wazne:
+Ważne pułapki i najlepsze praktyki dla `<VisualEditing />`:
 
-- `<VisualEditing />` powinno byc w layoucie aplikacji, nie tylko w wybranej stronie.
-- `SanityLive includeDrafts={isPreview}` powinien dostac true w preview.
-- Nie renderowac `<VisualEditing />` tylko warunkowo po `draftMode`, jezeli aplikacja ma problem z cookies w iframe. Bezpieczniej zostawic go zawsze, a dane kontrolowac przez fetch.
+- **Problem z warunkowym renderowaniem (`draftMode` w iframie)**: Jeśli użyjesz `{(await draftMode()).isEnabled && <VisualEditing />}` lub `{isPreview && <VisualEditing />}`, to komponent może nie zostać wyrenderowany w zewnętrznym (produkcyjnym) Sanity Studio z powodu blokowania ciasteczek `SameSite=Lax` w cross-origin iframes (np. przez Chrome/Safari). Jeśli `<VisualEditing />` się nie zrenderuje, Studio zgłosi błąd "Unable to connect to visual editing", ponieważ nie będzie w stanie dokonać handshake'u.
+- **Problem z renderowaniem bezwarunkowym**: Jeśli po prostu wstawisz `<VisualEditing />` na stałe, Sanity Studio połączy się bez problemu, ale nakładki i ikony edycji (Vercel Toolbar) zaczną się pojawiać u Ciebie również na publicznej stronie (na lokalnym serwerze lub na produkcji, gdy jesteś zalogowany).
+- **Złoty środek (Wrapper)**: Aby połączyć bezbłędne łączenie ze Studio z ukryciem ramek na publicznej stronie, użyj dedykowanego komponentu klienckiego z wbudowanym hookiem `useIsPresentationTool` oraz stylami CSS:
+
+`src/components/VisualEditingWrapper.tsx`
+```tsx
+'use client'
+
+import { VisualEditing } from 'next-sanity/visual-editing'
+import { useIsPresentationTool } from 'next-sanity/hooks'
+import { useEffect } from 'react'
+
+export default function VisualEditingWrapper() {
+  const isPresentationTool = useIsPresentationTool()
+
+  // Zawsze ładujemy VisualEditing, aby odpowiadał na handshake iframa (omija problem z cookie)
+  // Jeśli jednak nie jesteśmy w trybie Presentation Tool, chowamy cały UI za pomocą CSS.
+  useEffect(() => {
+    if (!isPresentationTool) {
+      const style = document.createElement('style')
+      style.innerHTML = `
+        sanity-visual-editing { display: none !important; }
+      `
+      document.head.appendChild(style)
+      return () => {
+        document.head.removeChild(style)
+      }
+    }
+  }, [isPresentationTool])
+
+  return <VisualEditing />
+}
+```
+
+Dzięki temu w `layout.tsx` podpinasz po prostu bezwarunkowo `<VisualEditingWrapper />` zamiast oryginalnego `<VisualEditing />`.
 
 ## Preview headers
 

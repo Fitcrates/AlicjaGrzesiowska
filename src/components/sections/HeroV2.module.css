@@ -4,21 +4,21 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: var(--spacing-xl) var(--spacing-md);
+  padding: calc(var(--spacing-xl) / 1.5) var(--spacing-md);
   width: 100%;
 }
 
 .editorWindow {
   width: 100%;
   max-width: 1200px;
-  background: rgba(255, 255, 255, 0.5);
+  background: rgba(255, 252, 245, 0.72);
   backdrop-filter: blur(24px);
   -webkit-backdrop-filter: blur(24px);
-  border: 1px solid rgba(255, 255, 255, 0.6);
+  border: 1px solid rgba(109, 74, 184, 0.14);
   border-radius: 16px;
   box-shadow: 
-    0 30px 60px -15px rgba(0, 0, 0, 0.08),
-    inset 0 0 0 1px rgba(255, 255, 255, 0.2),
+    0 30px 60px -15px rgba(75, 46, 145, 0.10),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.4),
     inset 0 0 20px rgba(255, 255, 255, 0.3);
   overflow: hidden;
   display: flex;
@@ -37,8 +37,8 @@
 
 .titleBar {
   height: 48px;
-  background: rgba(255, 255, 255, 0.2);
-  border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+  background: rgba(255, 255, 255, 0.35);
+  border-bottom: 1px solid rgba(58, 42, 102, 0.06);
   display: flex;
   align-items: center;
   padding: 0 16px;
@@ -74,7 +74,7 @@
 .fileName {
   font-family: var(--font-body);
   font-size: 0.85rem;
-  color: rgba(0, 0, 0, 0.6);
+  color: rgba(34, 28, 51, 0.6);
   font-weight: 500;
   margin: 0 auto;
   transform: translateX(-24px); /* offset for the dots */
@@ -84,8 +84,8 @@
 
 .toolBar {
   padding: 12px 16px;
-  background: rgba(255, 255, 255, 0.3);
-  border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+  background: rgba(255, 255, 255, 0.4);
+  border-bottom: 1px solid rgba(58, 42, 102, 0.06);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -110,7 +110,7 @@
   align-items: center;
   gap: 8px;
   padding-right: 24px;
-  border-right: 1px solid rgba(0, 0, 0, 0.06);
+  border-right: 1px solid rgba(58, 42, 102, 0.08);
 }
 
 .editorWindow.dark .toolGroup {
@@ -129,21 +129,21 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  color: rgba(0, 0, 0, 0.6);
+  color: rgba(34, 28, 51, 0.55);
   cursor: pointer;
   transition: all 0.2s ease;
 }
 
 .toolButton:hover {
-  background: rgba(255, 255, 255, 0.5);
-  color: rgba(0, 0, 0, 0.9);
-  box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+  background: rgba(255, 255, 255, 0.7);
+  color: var(--color-violet);
+  box-shadow: 0 2px 4px rgba(75,46,145,0.04);
 }
 
 .toolButtonActive {
-  background: rgba(255, 255, 255, 0.8);
-  color: var(--color-terracotta);
-  box-shadow: inset 0 1px 2px rgba(0,0,0,0.05);
+  background: var(--color-violet-soft);
+  color: var(--color-violet);
+  box-shadow: inset 0 1px 2px rgba(75,46,145,0.08);
 }
 
 .editorWindow.dark .toolButton { color: rgba(255, 255, 255, 0.6); }
@@ -153,7 +153,7 @@
 }
 .editorWindow.dark .toolButtonActive {
   background: rgba(0, 0, 0, 0.3);
-  color: var(--color-terracotta);
+  color: #B9A1F0;
   box-shadow: inset 0 1px 2px rgba(0,0,0,0.2);
 }
 
@@ -181,10 +181,10 @@
 }
 
 .heroProblemText {
-  font-family: var(--font-body);
-  font-size: clamp(1rem, 1.2vw, 1.2rem);
+  font-family: var(--font-heading);
+  font-size: clamp(1.05rem, 1.3vw, 1.3rem);
   line-height: 1.5;
-  color: rgba(0, 0, 0, 0.6);
+  color: rgba(34, 28, 51, 0.65);
   font-style: italic;
   max-width: 600px;
 }
@@ -211,7 +211,7 @@
   font-size: clamp(2rem, 5vw, 6rem);
   line-height: 1.1;
   letter-spacing: -0.02em;
-  color: #111;
+  color: var(--color-primary);
   display: flex;
   flex-wrap: wrap;
   align-items: baseline;
@@ -226,18 +226,19 @@
   position: relative;
   display: inline-flex;
   align-items: baseline;
-  color: rgba(0, 0, 0, 0.4);
+  color: rgba(34, 28, 51, 0.35);
 }
 
 .editorWindow.dark .draftWord { color: rgba(255, 255, 255, 0.4); }
 
 .strikethroughAnim {
   position: absolute;
-  top: 50%;
-  left: 0;
-  height: 0.1em;
-  background-color: var(--color-terracotta);
-  transform: translateY(-50%);
+  top: 52%;
+  left: -0.05em;
+  height: 0.07em;
+  background-color: var(--color-violet);
+  border-radius: 2px;
+  transform: translateY(-50%) rotate(-1.2deg);
   z-index: 10;
 }
 
@@ -250,20 +251,28 @@
   font-family: var(--font-heading);
   font-style: italic;
   font-weight: 400;
-  color: var(--color-terracotta);
+  color: var(--color-violet-deep);
+  background-image: linear-gradient(
+    180deg,
+    transparent 58%,
+    rgba(255, 216, 77, 0.65) 58%,
+    rgba(255, 216, 77, 0.65) 94%,
+    transparent 94%
+  );
+  padding: 0 0.06em;
 }
 
 .statusBar {
   height: 32px;
-  background: rgba(255, 255, 255, 0.3);
-  border-top: 1px solid rgba(0, 0, 0, 0.04);
+  background: rgba(255, 255, 255, 0.4);
+  border-top: 1px solid rgba(58, 42, 102, 0.06);
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 0 16px;
   font-family: var(--font-mono);
   font-size: 0.7rem;
-  color: rgba(0, 0, 0, 0.5);
+  color: rgba(34, 28, 51, 0.5);
   position: relative;
   z-index: 2;
 }
@@ -279,7 +288,7 @@
   margin-right: 0.5em;
   font-family: var(--font-body);
   font-weight: 500;
-  color: var(--color-terracotta);
+  color: var(--color-violet);
 }
 
 /* Bottom bar */
@@ -296,5 +305,5 @@
   font-size: 0.65rem;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  color: var(--color-primary);
+  color: var(--color-violet);
 }

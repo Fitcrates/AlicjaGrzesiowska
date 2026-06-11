@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X } from "lucide-react";
 import { stegaClean } from "next-sanity";
@@ -119,6 +119,23 @@ export default function ChallengeSelection({
   locale?: Locale;
 }) {
   const [selectedId, setSelectedId] = useState<string | null>(null);
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  // Lock body scroll + close on Escape while the overlay is open
+  useEffect(() => {
+    if (!selectedId) return;
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setSelectedId(null);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => {
+      document.body.style.overflow = prevOverflow;
+      window.removeEventListener("keydown", onKey);
+    };
+  }, [selectedId]);
+
   
   // Use Sanity data or fallback to default
   const activeChallenges = sanityChallenges && sanityChallenges.length > 0 ? sanityChallenges : defaultChallenges;
@@ -173,7 +190,8 @@ export default function ChallengeSelection({
         </h2>
       </div>
 
-      <div className={styles.grid}>
+      <div className={styles.gridContainer}>
+        <div className={styles.grid}>
         {activeChallenges.map((challenge, index) => {
           const challengeId = challenge._id || challenge.id
 
@@ -196,19 +214,18 @@ export default function ChallengeSelection({
           </motion.div>
           )
         })}
+        </div>
       </div>
 
       <AnimatePresence>
         {selectedId && selectedChallenge && (
           <motion.div
             className={styles.expandedOverlay}
-            initial={{ clipPath: "circle(0% at 50% 50%)" }}
-            animate={{ clipPath: "circle(150% at 50% 50%)" }}
-            exit={{ clipPath: "circle(0% at 50% 50%)" }}
-            transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.3, ease: "easeOut" }}
           >
-            <div className={styles.textureOverlay}></div>
-            
             <button
               className={styles.closeButton}
               onClick={() => setSelectedId(null)}
@@ -216,8 +233,22 @@ export default function ChallengeSelection({
               <X size={24} />
             </button>
 
-            <div className={styles.scrollContainer}>
-              <div className={styles.expandedInner}>
+            <div
+              className={styles.scrollContainer}
+              ref={scrollRef}
+              onClick={(e) => {
+                if (e.target === e.currentTarget) setSelectedId(null);
+              }}
+            >
+              <motion.div
+                key={selectedChallenge._id || selectedChallenge.id}
+                className={styles.expandedShadowWrapper}
+                initial={{ opacity: 0, y: 48, scale: 0.985 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: 24 }}
+                transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+              >
+                <div className={styles.expandedInner}>
                 <header className={styles.pathHeader}>
                   <span className={styles.pathLabel} data-sanity={homeAttr("challengeLabel")}>
                     {singleChallengeLabel} {selectedChallenge.number}
@@ -263,8 +294,7 @@ export default function ChallengeSelection({
 
                 {nextChallenge && (
                   <footer className={styles.pathFooter} onClick={() => {
-                    const scrollContainer = document.querySelector(`.${styles.scrollContainer}`);
-                    if (scrollContainer) scrollContainer.scrollTo({ top: 0, behavior: 'smooth' });
+                    scrollRef.current?.scrollTo({ top: 0, behavior: "smooth" });
                     setTimeout(() => setSelectedId(nextChallenge._id || nextChallenge.id || null), 300);
                   }}>
                     <div className={styles.nextPrompt} data-sanity={homeAttr("nextChallengeLabel")}>
@@ -276,6 +306,7 @@ export default function ChallengeSelection({
                   </footer>
                 )}
               </div>
+              </motion.div>
             </div>
           </motion.div>
         )}

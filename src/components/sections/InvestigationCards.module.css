@@ -7,8 +7,14 @@
   display: flex;
   align-items: center;
   gap: var(--spacing-md);
-  padding: var(--spacing-md) var(--spacing-xl);
+  padding: calc(var(--spacing-md) / 1.5) var(--spacing-md);
   border-bottom: var(--border-thin);
+}
+
+@media (min-width: 1024px) {
+  .sectionHeader {
+    padding: calc(var(--spacing-md) / 1.5) var(--spacing-md);
+  }
 }
 
 .sectionNumber {
@@ -26,37 +32,53 @@
   color: var(--color-secondary);
 }
 
+/* ── Grid: constrained on large screens ── */
+
 .grid {
   display: grid;
   grid-template-columns: 1fr;
   gap: var(--spacing-md);
-  padding: var(--spacing-lg);
+  padding: calc(var(--spacing-lg) / 1.5) var(--spacing-md);
+  max-width: 1400px;
+  margin: 0 auto;
 }
 
 @media (min-width: 768px) {
   .grid {
     grid-template-columns: repeat(2, 1fr);
-    gap: var(--spacing-lg);
-    padding: var(--spacing-lg);
+    gap: var(--spacing-md);
+    padding: calc(var(--spacing-lg) / 1.5) var(--spacing-md);
   }
 }
 
-@media (min-width: 1440px) {
+@media (min-width: 1200px) {
   .grid {
     grid-template-columns: repeat(4, 1fr);
-    gap: var(--spacing-lg);
-    padding: var(--spacing-xl);
+    gap: var(--spacing-md);
+    padding: calc(var(--spacing-xl) / 1.5) var(--spacing-md);
   }
 }
 
-/* grid placeholder */
+/* ═══════════════════════════════════════
+   DESKTOP (768px+): Book-flip mechanic
+   ═══════════════════════════════════════ */
+
+/* ── Grid placeholder ── */
+
 .placeholder {
   position: relative;
   aspect-ratio: 5/4;
   width: 100%;
 }
 
-/* Card container with perspective */
+@media (min-width: 1200px) {
+  .placeholder {
+    aspect-ratio: 4/5;
+  }
+}
+
+/* ── Card container with perspective ── */
+
 .cardWrapper {
   perspective: 2000px;
   cursor: pointer;
@@ -66,61 +88,58 @@
   z-index: 1;
 }
 
-@media (min-width: 1440px) {
-  .placeholder {
-    aspect-ratio: 3/4;
-  }
+@media (min-width: 1200px) {
   .cardWrapper {
-    aspect-ratio: 3/4;
+    aspect-ratio: 4/5;
   }
 }
 
-/* Dim backdrop when any card is open */
+/* ── Dim backdrop when any card is open ── */
+
 .pageOverlay {
   position: fixed;
   inset: 0;
-  background: rgba(244, 240, 232, 0.85);
+  background: rgba(250, 245, 236, 0.88);
   backdrop-filter: blur(8px);
   z-index: 100;
 }
 
-.isOpen.cardWrapper {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  width: 20%;
-  max-width: 320px;
-  aspect-ratio: 3/4;
-  height: auto;
-  /* Hinge (left edge) at center, vertically centered */
-  transform: translate(0, -50%) !important; 
-  margin: 0;
-  z-index: 201; /* Above pageOverlay */
-  cursor: default;
-}
+/* ── Open card — DESKTOP: large centered book ── */
 
-@media (max-width: 1199px) {
+@media (min-width: 768px) {
   .isOpen.cardWrapper {
-    width: 35%;
-    max-width: 260px;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    /* Each page is 35vw wide → total open book = ~70vw */
+    width: 35vw;
+    max-width: 450px;
+    aspect-ratio: 3/4;
+    height: auto;
+    /* Hinge (left edge) at screen center, vertically centered */
+    transform: translate(0, -50%) !important;
+    margin: 0;
+    z-index: 201;
+    cursor: default;
   }
 }
 
-@media (max-width: 767px) {
+@media (min-width: 768px) and (max-width: 1199px) {
   .isOpen.cardWrapper {
-    width: 45%; 
-    max-width: 200px;
+    width: 30vw;
+    max-width: 380px;
   }
 }
 
-/* The static back page (revealed when cover opens) */
+/* ── The static back page (revealed when cover opens) ── */
+
 .bookRightPage {
   position: absolute;
   inset: 0;
   background: var(--surface);
   border: none;
   box-shadow: var(--shadow-sm);
-  padding: var(--spacing-lg);
+  padding: calc(var(--spacing-lg) / 1.5) var(--spacing-lg);
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -130,7 +149,7 @@
 .cardBackContent {
   font-family: var(--font-heading);
   font-style: italic;
-  font-size: clamp(1rem, 1.5vw, 1.1rem);
+  font-size: clamp(0.95rem, 1.3vw, 1.15rem);
   line-height: 1.6;
   color: var(--color-primary);
   margin-bottom: var(--spacing-md);
@@ -153,34 +172,49 @@
   opacity: 0.6;
 }
 
-/* The flipping cover */
+/* ── The flipping cover ── */
+
 .bookCover {
   position: absolute;
   inset: 0;
-  transform-style: preserve-3d;
-  transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
-  transform-origin: left center; /* always flip horizontally */
   z-index: 2;
 }
 
-/* Delay flip until after centering transition on open */
-.isOpen .bookCover {
-  transform: rotateY(-180deg);
-  transition-delay: 0.4s;
+.bookCoverInner {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  transform-style: preserve-3d;
+  transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+  transform-origin: left center;
 }
 
-/* Front face of cover */
+/* Delay flip until after centering transition on open (desktop) */
+@media (min-width: 768px) {
+  .isOpen .bookCoverInner {
+    transform: rotateY(-180deg);
+    transition-delay: 0.4s;
+  }
+}
+
+/* ── Front face of cover ── */
+
 .coverFront {
   position: absolute;
   inset: 0;
   background: var(--surface);
   border: none;
   box-shadow: var(--shadow-sm);
-  padding: var(--spacing-lg);
+  padding: calc(var(--spacing-lg) / 1.5) var(--spacing-lg);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   backface-visibility: hidden;
+  transition: box-shadow 0.3s ease;
+}
+
+.coverFront:hover {
+  box-shadow: var(--shadow-md);
 }
 
 .cardHeader {
@@ -203,26 +237,27 @@
 
 .cardTitle {
   font-family: var(--font-heading);
-  font-size: clamp(1.25rem, 2.5vw, 2.5rem);
-  line-height: 1.15;
+  font-size: clamp(1.1rem, 1.8vw, 1.5rem);
+  line-height: 1.2;
   font-weight: 400;
   text-align: center;
   margin-bottom: var(--spacing-lg);
 }
 
-/* Back face of cover (inside page) */
+/* ── Back face of cover (inside page) ── */
+
 .coverBack {
   position: absolute;
   inset: 0;
   background: var(--surface);
   border: none;
-  box-shadow: -4px 0 12px rgba(0,0,0,0.03); /* Subtle shadow on the left edge when open */
-  padding: var(--spacing-lg);
+  box-shadow: -4px 0 12px rgba(0,0,0,0.03);
+  padding: calc(var(--spacing-lg) / 1.5) var(--spacing-lg);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   backface-visibility: hidden;
-  transform: rotateY(180deg); /* always horizontal upright */
+  transform: rotateY(180deg);
 }
 
 .coverBackHeader {
@@ -232,9 +267,90 @@
 
 .coverBackTitle {
   font-family: var(--font-heading);
-  font-size: clamp(1.1rem, 1.8vw, 1.5rem);
-  line-height: 1.1;
+  font-size: clamp(1rem, 1.5vw, 1.3rem);
+  line-height: 1.15;
   text-align: center;
   margin-top: auto;
   margin-bottom: auto;
+}
+
+
+/* ═══════════════════════════════════════
+   MOBILE (<768px): Vertical accordion
+   Card stays in-place, content reveals below
+   ═══════════════════════════════════════ */
+
+@media (max-width: 767px) {
+  .pageOverlay {
+    display: none;
+  }
+
+  .placeholderOpen {
+    aspect-ratio: auto;
+    height: auto;
+  }
+
+  /* Card wrapper stays in normal flow always */
+  .cardWrapper {
+    position: relative;
+    width: 100%;
+    aspect-ratio: auto;
+    height: auto;
+    transform: none !important;
+    display: flex;
+    flex-direction: column;
+    perspective: none;
+  }
+
+  /* Book cover wrapper determines collapsed height */
+  .bookCover {
+    position: relative;
+    inset: auto;
+    aspect-ratio: 5/4;
+    width: 100%;
+    z-index: 2;
+  }
+
+  .bookCoverInner {
+    width: 100%;
+    height: 100%;
+    transform: none !important;
+    transform-style: flat;
+    transition: none;
+  }
+
+  .coverFront {
+    position: absolute;
+    inset: 0;
+  }
+
+  .coverBack {
+    display: none;
+  }
+
+  /* Back page starts collapsed. Height changes instantly so Framer Motion can catch and animate it. */
+  .bookRightPage {
+    position: relative;
+    inset: auto;
+    height: 0;
+    padding: 0 var(--spacing-lg);
+    margin: 0;
+    overflow: hidden;
+    opacity: 0;
+    box-shadow: none;
+    border-top: 1px solid transparent;
+    transition: opacity 0.4s ease;
+    z-index: 1;
+  }
+
+  .isOpen .bookRightPage {
+    height: auto;
+    opacity: 1;
+    padding: calc(var(--spacing-lg) / 1.5) var(--spacing-lg);
+    border-top: var(--border-thin);
+  }
+
+  .cardBackContent {
+    font-size: 1rem;
+  }
 }

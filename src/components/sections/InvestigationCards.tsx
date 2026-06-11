@@ -101,7 +101,7 @@ export default function InvestigationCards({
           const isOpen = openCardId === cardId;
 
           return (
-            <div key={cardId} className={styles.placeholder}>
+            <motion.div layout key={cardId} className={`${styles.placeholder} ${isOpen ? styles.placeholderOpen : ""}`}>
               <motion.div
                 layout
                 className={`${styles.cardWrapper} ${isOpen ? styles.isOpen : ""}`}
@@ -116,7 +116,7 @@ export default function InvestigationCards({
                 }}
               >
                 {/* The static back page (Right Page) */}
-                <div className={styles.bookRightPage}>
+                <motion.div layout className={styles.bookRightPage}>
                   <p className={styles.cardBackContent} data-sanity={cardAttr(card, "backContent")}>
                     {card.backContent}
                   </p>
@@ -132,12 +132,13 @@ export default function InvestigationCards({
                   >
                     {isOpen ? closeLabel : exploreHowLabel}
                   </span>
-                </div>
+                </motion.div>
 
                 {/* The flipping cover (Left Page) */}
-                <div className={styles.bookCover}>
-                  {/* Front face (Cover) */}
-                  <div className={styles.coverFront}>
+                <motion.div layout className={styles.bookCover}>
+                  <div className={styles.bookCoverInner}>
+                    {/* Front face (Cover) */}
+                    <div className={styles.coverFront}>
                     <div className={styles.cardHeader}>
                       <span className={styles.cardNumber} data-sanity={cardRootAttr(card, "number")}>
                         {card.number}
@@ -164,10 +165,11 @@ export default function InvestigationCards({
                     <h3 className={styles.coverBackTitle} data-sanity={cardAttr(card, "backTitle")}>
                       {card.backTitle}
                     </h3>
+                    </div>
                   </div>
-                </div>
+                </motion.div>
               </motion.div>
-            </div>
+            </motion.div>
           );
         })}
       </div>
