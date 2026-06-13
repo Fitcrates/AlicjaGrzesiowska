@@ -37,7 +37,9 @@ export default function Navbar() {
     <>
       {/* Desktop Navigation */}
       <nav className={styles.navDesktop}>
-        <span className={styles.brand}>Alicja Grzesiowska</span>
+        <div className={styles.brandWrapper}>
+          <span className={styles.brand}>Alicja Grzesiowska</span>
+        </div>
         <ul className={styles.navLinks}>
           <li>
             <Link href={`/${lang}`} className={styles.navLink}>Start</Link>
@@ -58,7 +60,9 @@ export default function Navbar() {
             <Link href={`/${lang}#portfolio`} className={styles.navLink}>Portfolio</Link>
           </li>
         </ul>
-        <Link href={`/${lang}#contact`} className={styles.navLink}>Contact</Link>
+        <div className={styles.contactWrapper}>
+          <Link href={`/${lang}#contact`} className={styles.navLink}>Contact</Link>
+        </div>
       </nav>
 
       {/* Mobile Navigation */}

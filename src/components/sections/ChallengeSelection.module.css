@@ -74,6 +74,14 @@
   }
 }
 
+@media (min-width: 1536px) {
+  .grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--spacing-lg);
+    max-width: 1800px;
+  }
+}
+
 /* ── Individual card ── */
 
 .column {
@@ -106,6 +114,14 @@
   }
 }
 
+@media (min-width: 1536px) {
+  .column {
+    aspect-ratio: 3/4;
+    min-height: auto;
+    padding: var(--spacing-xl);
+  }
+}
+
 .column:hover {
   box-shadow: var(--shadow-md);
   transform: translateY(-3px);
@@ -124,6 +140,12 @@
   letter-spacing: -0.02em;
 }
 
+@media (min-width: 1536px) {
+  .columnNumber {
+    font-size: 4.5rem;
+  }
+}
+
 /* ── Card text ── */
 
 .columnText {
@@ -133,6 +155,12 @@
   line-height: 1.35;
   color: var(--color-primary);
   margin-top: auto;
+}
+
+@media (min-width: 1536px) {
+  .columnText {
+    font-size: 1.5rem;
+  }
 }
 
 /* ── Intro section ── */
@@ -444,12 +472,12 @@
 
 .closeButton {
   position: absolute;
-  top: var(--spacing-lg);
-  right: var(--spacing-lg);
-  background: rgba(255, 252, 245, 0.12);
-  border: 1px solid rgba(255, 252, 245, 0.25);
-  width: 56px;
-  height: 56px;
+  top: var(--spacing-md);
+  right: var(--spacing-md);
+  background: transparent;
+  border: 1px solid var(--color-primary);
+  width: 48px;
+  height: 48px;
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -457,12 +485,12 @@
   cursor: pointer;
   z-index: 110;
   transition: all 0.3s ease;
-  color: #FFFCF5;
+  color: var(--color-primary);
 }
 
 .closeButton:hover {
-  background: var(--surface);
-  border-color: var(--surface);
-  color: var(--color-primary);
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+  color: var(--surface);
   transform: scale(1.05);
 }

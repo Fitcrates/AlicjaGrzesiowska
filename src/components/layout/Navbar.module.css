@@ -33,7 +33,7 @@
   z-index: 1000;
 }
 
-@media (min-width: 768px) {
+@media (min-width: 1024px) {
   .navDesktop {
     display: flex;
   }
@@ -43,6 +43,18 @@
   display: flex;
   list-style: none;
   gap: var(--spacing-xl);
+}
+
+.brandWrapper {
+  flex: 1;
+  display: flex;
+}
+
+.contactWrapper {
+  flex: 1;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
 }
 
 /* Mobile */
@@ -57,7 +69,7 @@
   z-index: 1000;
 }
 
-@media (min-width: 768px) {
+@media (min-width: 1024px) {
   .navMobile {
     display: none;
   }

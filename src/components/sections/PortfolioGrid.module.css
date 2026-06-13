@@ -79,14 +79,32 @@
   display: flex;
   gap: var(--spacing-xl);
   align-items: center;
+  flex-wrap: wrap;
 }
 
 .metaItem {
   display: flex;
   flex-direction: column;
   gap: 0.15rem;
-  min-width: 120px;
 }
+
+@media (min-width: 768px) {
+  .metaItem:nth-child(1) {
+    min-width: 100px;
+    max-width: 100px;
+  }
+
+  .metaItem:nth-child(2) {
+    min-width: 60px;
+    max-width: 60px;
+  }
+
+  .metaItem:nth-child(3) {
+    min-width: 200px;
+    max-width: 200px;
+  }
+}
+
 
 .metaLabel {
   font-family: var(--font-mono);
@@ -111,6 +129,14 @@
   gap: var(--spacing-sm);
   white-space: nowrap;
   transition: all var(--transition-normal);
+}
+
+@media (min-width: 768px) {
+  .viewCase {
+    min-width: 120px;
+    max-width: 120px;
+    justify-content: flex-end;
+  }
 }
 
 .row:hover .viewCase {

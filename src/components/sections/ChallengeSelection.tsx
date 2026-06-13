@@ -226,12 +226,6 @@ export default function ChallengeSelection({
             exit={{ opacity: 0 }}
             transition={{ duration: 0.3, ease: "easeOut" }}
           >
-            <button
-              className={styles.closeButton}
-              onClick={() => setSelectedId(null)}
-            >
-              <X size={24} />
-            </button>
 
             <div
               className={styles.scrollContainer}
@@ -249,7 +243,13 @@ export default function ChallengeSelection({
                 transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
               >
                 <div className={styles.expandedInner}>
-                <header className={styles.pathHeader}>
+                  <button
+                    className={styles.closeButton}
+                    onClick={() => setSelectedId(null)}
+                  >
+                    <X size={24} />
+                  </button>
+                  <header className={styles.pathHeader}>
                   <span className={styles.pathLabel} data-sanity={homeAttr("challengeLabel")}>
                     {singleChallengeLabel} {selectedChallenge.number}
                   </span>
